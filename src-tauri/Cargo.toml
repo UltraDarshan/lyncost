@@ -1,9 +1,12 @@
 [package]
 name = "lyncost"
-version = "0.1.9"
+version = "0.2.0"
 description = "Lyncost - 100% Offline, Privacy-First Personal Finance & Investment Tracker"
 authors = ["Wintershogun TechLabs"]
+license = "LicenseRef-Proprietary"
+repository = "https://github.com/UltraDarshan/lyncost"
 edition = "2021"
+rust-version = "1.80"
 
 [lib]
 name = "lyncost_lib"
@@ -15,12 +18,18 @@ tauri-build = { version = "2", features = [] }
 [dependencies]
 tauri = { version = "2", features = [] }
 tauri-plugin-opener = "2"
-tauri-plugin-dialog = "2"
+tauri-plugin-notification = "2"
+tauri-plugin-single-instance = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 rusqlite = { version = "0.33", features = ["bundled"] }
 chrono = { version = "0.4", features = ["serde"] }
-dirs = "6.0"
+bcrypt = "0.17"
+dirs = "6"
+
+[dev-dependencies]
+tauri = { version = "2", features = ["test"] }
+tempfile = "3"
 
 [profile.release]
 codegen-units = 1
