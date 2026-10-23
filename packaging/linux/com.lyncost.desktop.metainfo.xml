@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>com.lyncost.desktop</id>
+  <name>Lyncost</name>
+  <summary>Offline, privacy-first personal finance and investment tracker</summary>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>LicenseRef-proprietary</project_license>
+  <developer id="com.wintershogun">
+    <name>Wintershogun TechLabs</name>
+  </developer>
+  <description>
+    <p>
+      Lyncost keeps your money organised without ever sending your data anywhere.
+      Everything lives in a local database on your computer.
+    </p>
+    <ul>
+      <li>Accounts, transfers and automatic net-worth tracking</li>
+      <li>Budgets with pace warnings, savings goals and recurring transactions</li>
+      <li>Loans and credit lines with drawdown and repayment history</li>
+      <li>Stocks, mutual funds and crypto with profit/loss in your base currency</li>
+      <li>Bill reminders, warranty tracking, CSV import/export and daily backups</li>
+      <li>PIN lock and multi-currency support</li>
+    </ul>
+  </description>
+  <launchable type="desktop-id">Lyncost.desktop</launchable>
+  <url type="homepage">https://github.com/UltraDarshan/lyncost</url>
+  <url type="bugtracker">https://github.com/UltraDarshan/lyncost/issues</url>
+  <categories>
+    <category>Office</category>
+    <category>Finance</category>
+  </categories>
+  <keywords>
+    <keyword>finance</keyword>
+    <keyword>budget</keyword>
+    <keyword>expense</keyword>
+    <keyword>investment</keyword>
+  </keywords>
+  <content_rating type="oars-1.1"/>
+  <releases>
+    <release version="0.2.0" date="2026-10-23">
+      <description>
+        <p>Rebuilt backend: reliable balances, live budgets, recurring rules, bill payments, safe restore and hashed PIN.</p>
+      </description>
+    </release>
+  </releases>
+</component>
