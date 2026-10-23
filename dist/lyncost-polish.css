@@ -1,0 +1,455 @@
+/*
+ * Lyncost polish layer (v0.2.0)
+ *
+ * The original frontend source was lost, so the visual refinement lives here,
+ * loaded after the compiled bundle CSS. It keeps the product's identity
+ * (violet accent, light + dark themes) and replaces the heavy weights,
+ * neon glows and neumorphic shadows with a calmer, premium finish.
+ * Selectors are prefixed with `html.theme-*` to outrank the bundle's
+ * `.theme-*` overrides, which also use !important.
+ */
+
+/* ---------- Type ---------------------------------------------------------- */
+
+@font-face {
+  font-family: "Manrope";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 200 800;
+  src: url("/fonts/manrope-latin-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308,
+    U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Manrope";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 200 800;
+  src: url("/fonts/manrope-latin-ext-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
+    U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+:root {
+  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  /* Amounts were set in a monospace "terminal" face; tabular figures keep
+     columns aligned without the costume. */
+  --font-mono: "Manrope", ui-sans-serif, system-ui, sans-serif;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 160ms;
+  --dur: 240ms;
+  --dur-slow: 420ms;
+}
+
+html,
+body {
+  font-family: var(--font-sans);
+  font-feature-settings: "calt", "liga";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+input, select, textarea, button, optgroup {
+  font-family: inherit;
+}
+
+.font-mono,
+td,
+[class*="tabular"] {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.005em;
+}
+
+h1, h2, h3 {
+  letter-spacing: -0.022em;
+  text-wrap: balance;
+}
+
+/* Big hero numbers (net worth, totals) */
+[class*="text-4xl"], [class*="text-5xl"], [class*="text-3xl"] {
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Palette ------------------------------------------------------- */
+
+html.theme-dark {
+  --lc-canvas: #0b0a10;
+  --lc-sidebar: #0e0d14;
+  --lc-surface: #13121a;
+  --lc-raised: #1a1923;
+  --lc-line: rgb(255 255 255 / 0.07);
+  --lc-line-strong: rgb(255 255 255 / 0.13);
+  --lc-text: #f3f2f7;
+  --lc-muted: #a3a1b0;
+  --lc-accent: #8b6cf6;
+  --lc-accent-hover: #9c82f8;
+  --lc-accent-soft: rgb(139 108 246 / 0.14);
+  --lc-accent-text: #c4b5fd;
+  --lc-shadow: 0 1px 0 rgb(255 255 255 / 0.035) inset, 0 12px 32px -18px rgb(0 0 0 / 0.75);
+  --lc-shadow-hover: 0 1px 0 rgb(255 255 255 / 0.05) inset, 0 18px 40px -20px rgb(0 0 0 / 0.85);
+  --lc-modal-shadow: 0 30px 80px -24px rgb(0 0 0 / 0.85);
+}
+
+html.theme-light {
+  --lc-canvas: #f6f5f2;
+  --lc-sidebar: #fbfaf8;
+  --lc-surface: #ffffff;
+  --lc-raised: #f3f1ee;
+  --lc-line: rgb(24 18 48 / 0.08);
+  --lc-line-strong: rgb(24 18 48 / 0.15);
+  --lc-text: #15131d;
+  --lc-muted: #5d5a6b;
+  --lc-accent: #6d4ae8;
+  --lc-accent-hover: #5f3cdc;
+  --lc-accent-soft: rgb(109 74 232 / 0.09);
+  --lc-accent-text: #5b3bd6;
+  --lc-shadow: 0 1px 2px rgb(24 18 48 / 0.04), 0 10px 28px -16px rgb(24 18 48 / 0.14);
+  --lc-shadow-hover: 0 1px 2px rgb(24 18 48 / 0.05), 0 16px 36px -18px rgb(24 18 48 / 0.2);
+  --lc-modal-shadow: 0 30px 80px -28px rgb(24 18 48 / 0.35);
+}
+
+html.theme-dark, html.theme-dark body, html.theme-dark #root, html.theme-dark main,
+html.theme-light, html.theme-light body, html.theme-light #root, html.theme-light main {
+  background-color: var(--lc-canvas) !important;
+  color: var(--lc-text) !important;
+}
+
+/* ---------- Layout -------------------------------------------------------- */
+
+/* Center page content on wide monitors instead of pinning it left. */
+main {
+  max-width: none !important;
+}
+main > div {
+  max-width: 80rem;
+  margin-inline: auto;
+}
+
+/* ---------- Sidebar ------------------------------------------------------- */
+
+html.theme-dark aside,
+html.theme-light aside {
+  background-color: var(--lc-sidebar) !important;
+  border-right: 1px solid var(--lc-line) !important;
+  box-shadow: none !important;
+}
+
+html.theme-dark aside nav button,
+html.theme-light aside nav button {
+  font-weight: 500 !important;
+  transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out) !important;
+}
+html.theme-dark aside nav button span,
+html.theme-light aside nav button span {
+  font-weight: 500 !important;
+}
+
+html.theme-dark aside nav button[class*="bg-purple-"],
+html.theme-light aside nav button[class*="bg-purple-"] {
+  background-color: var(--lc-accent-soft) !important;
+  border: 1px solid transparent !important;
+  box-shadow: none !important;
+}
+html.theme-dark aside nav button[class*="bg-purple-"] *,
+html.theme-light aside nav button[class*="bg-purple-"] * {
+  color: var(--lc-accent-text) !important;
+  font-weight: 600 !important;
+}
+html.theme-dark aside nav button:not([class*="bg-purple-"]):hover {
+  background-color: rgb(255 255 255 / 0.04) !important;
+}
+html.theme-light aside nav button:not([class*="bg-purple-"]):hover {
+  background-color: rgb(24 18 48 / 0.04) !important;
+}
+
+/* ---------- Surfaces ------------------------------------------------------ */
+
+html.theme-dark [class*="rounded-2xl"],
+html.theme-dark [class*="rounded-xl"]:not(aside nav button):not(button):not(input):not(select):not(textarea):not(span),
+html.theme-light div[class*="rounded-2xl"],
+html.theme-light section[class*="rounded-2xl"],
+html.theme-light div[class*="rounded-xl"]:not(aside nav button):not(button *) {
+  border-color: var(--lc-line) !important;
+  box-shadow: var(--lc-shadow) !important;
+  transition: border-color var(--dur) var(--ease-out), box-shadow var(--dur) var(--ease-out),
+    transform var(--dur) var(--ease-out), background-color var(--dur) var(--ease-out) !important;
+}
+html.theme-dark [class*="rounded-2xl"] {
+  background-color: var(--lc-surface) !important;
+}
+html.theme-light div[class*="rounded-2xl"],
+html.theme-light section[class*="rounded-2xl"] {
+  background-color: var(--lc-surface) !important;
+}
+
+html.theme-dark [class*="rounded-2xl"]:hover,
+html.theme-light div[class*="rounded-2xl"]:hover {
+  border-color: var(--lc-line-strong) !important;
+  box-shadow: var(--lc-shadow-hover) !important;
+}
+
+/* Keep tinted callouts (pending, warnings, success) tinted rather than flattened. */
+html.theme-dark [class*="rounded"][class*="bg-amber-500/"],
+html.theme-dark [class*="rounded"][class*="bg-rose-500/"],
+html.theme-dark [class*="rounded"][class*="bg-emerald-500/"],
+html.theme-dark [class*="rounded"][class*="bg-purple-500/"] {
+  box-shadow: none !important;
+}
+
+/* Inner chips/rows inside cards shouldn't stack a second shadow. */
+html.theme-dark [class*="rounded-2xl"] [class*="rounded-xl"]:not(button),
+html.theme-light div[class*="rounded-2xl"] div[class*="rounded-xl"] {
+  box-shadow: none !important;
+}
+
+/* ---------- Buttons ------------------------------------------------------- */
+
+html.theme-dark button, html.theme-light button,
+html.theme-dark select, html.theme-light select {
+  font-weight: 600 !important;
+}
+
+button {
+  transition: background-color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out), box-shadow var(--dur) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out), opacity var(--dur-fast) var(--ease-out);
+}
+button:not(:disabled):active {
+  transform: scale(0.98);
+}
+
+/* :not(#lc) adds ID-level specificity so the bundle's generic
+   "[class*=rounded-xl]" surface rule cannot repaint the accent button. */
+html.theme-dark .bg-purple-600:not(#lc),
+html.theme-light .bg-purple-600:not(#lc) {
+  background: linear-gradient(180deg, rgb(255 255 255 / 0.06), transparent) var(--lc-accent) !important;
+  border: 1px solid rgb(255 255 255 / 0.1) !important;
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.18) inset, 0 8px 20px -10px rgb(109 74 232 / 0.65) !important;
+  font-weight: 600 !important;
+  color: #fff !important;
+}
+html.theme-dark .bg-purple-600:not(#lc):hover,
+html.theme-light .bg-purple-600:not(#lc):hover {
+  background: linear-gradient(180deg, rgb(255 255 255 / 0.08), transparent) var(--lc-accent-hover) !important;
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.2) inset, 0 12px 26px -12px rgb(109 74 232 / 0.75) !important;
+}
+
+/* Solid action buttons (confirm, delete, repay). The bundle's generic surface
+   rule painted these dark in the dark theme; restore their meaning colors. */
+html.theme-dark button.bg-rose-600:not(#lc), html.theme-light button.bg-rose-600:not(#lc) {
+  background: #e11d48 !important; border: 1px solid transparent !important; color: #fff !important;
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.16) inset, 0 8px 20px -10px rgb(225 29 72 / 0.6) !important;
+}
+html.theme-dark button.bg-rose-600:not(#lc):hover, html.theme-light button.bg-rose-600:not(#lc):hover { background: #f43f5e !important; }
+html.theme-dark button.bg-emerald-600:not(#lc), html.theme-light button.bg-emerald-600:not(#lc) {
+  background: #059669 !important; border: 1px solid transparent !important; color: #fff !important;
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.16) inset, 0 8px 20px -10px rgb(5 150 105 / 0.6) !important;
+}
+html.theme-dark button.bg-emerald-600:not(#lc):hover, html.theme-light button.bg-emerald-600:not(#lc):hover { background: #10b981 !important; }
+html.theme-dark button.bg-amber-600:not(#lc), html.theme-light button.bg-amber-600:not(#lc) {
+  background: #d97706 !important; border: 1px solid transparent !important; color: #fff !important;
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.16) inset, 0 8px 20px -10px rgb(217 119 6 / 0.6) !important;
+}
+html.theme-dark button.bg-amber-600:not(#lc):hover, html.theme-light button.bg-amber-600:not(#lc):hover { background: #f59e0b !important; }
+html.theme-dark button[class*="bg-rose-600"] *, html.theme-dark button[class*="bg-emerald-600"] *,
+html.theme-dark button[class*="bg-amber-600"] *, html.theme-light button[class*="bg-amber-600"] * { color: #fff !important; }
+
+/* ---------- Text weight & color calm-down --------------------------------- */
+
+html.theme-dark h1, html.theme-dark h2, html.theme-dark h3,
+html.theme-light h1, html.theme-light h2, html.theme-light h3 {
+  font-weight: 700 !important;
+  color: var(--lc-text) !important;
+}
+html.theme-dark h4, html.theme-dark th, html.theme-dark .font-black, html.theme-dark .font-extrabold {
+  font-weight: 650 !important;
+}
+html.theme-light .font-black, html.theme-light .font-extrabold {
+  font-weight: 650 !important;
+}
+
+html.theme-dark .text-zinc-400, html.theme-dark .text-zinc-500 {
+  color: var(--lc-muted) !important;
+}
+html.theme-light .text-zinc-400, html.theme-light .text-zinc-500,
+html.theme-light .text-slate-400, html.theme-light .text-slate-500 {
+  color: var(--lc-muted) !important;
+}
+
+html.theme-dark [class*="text-purple-"] {
+  color: var(--lc-accent-text) !important;
+  font-weight: 600 !important;
+}
+html.theme-light [class*="text-purple-"] {
+  color: var(--lc-accent-text) !important;
+  font-weight: 600 !important;
+}
+html.theme-dark .bg-purple-600 *, html.theme-light .bg-purple-600 * {
+  color: #fff !important;
+}
+
+/* Money colors: keep the meaning, lose the shout. */
+html.theme-dark .text-emerald-400, html.theme-dark .text-emerald-500 { color: #34d399 !important; font-weight: 600 !important; }
+html.theme-dark .text-red-400, html.theme-dark .text-red-500, html.theme-dark .text-rose-400 { color: #fb7185 !important; font-weight: 600 !important; }
+/* Light theme: the bundle uses pale 300/400 shades meant for dark surfaces;
+   map every shade to one readable tone (solid colored buttons keep white text). */
+html.theme-light [class*="text-emerald-"]:not(button[class*="bg-emerald-6"] *),
+html.theme-light [class*="text-green-"] { color: #047857 !important; font-weight: 600 !important; }
+html.theme-light [class*="text-rose-"]:not(button[class*="bg-rose-6"] *),
+html.theme-light [class*="text-red-"] { color: #be123c !important; font-weight: 600 !important; }
+html.theme-light [class*="text-sky-"], html.theme-light [class*="text-blue-"] { color: #1d5fa8 !important; }
+html.theme-light [class*="text-amber-"]:not(button[class*="bg-amber-6"] *) { color: #a1460a !important; font-weight: 600 !important; }
+
+html.theme-light button, html.theme-light option, html.theme-light nav button span {
+  font-weight: 600 !important;
+}
+
+/* ---------- Tables -------------------------------------------------------- */
+
+html.theme-dark thead, html.theme-dark thead tr, html.theme-dark thead th {
+  background-color: var(--lc-raised) !important;
+  border-bottom: 1px solid var(--lc-line) !important;
+  color: var(--lc-muted) !important;
+  font-weight: 600 !important;
+}
+html.theme-light thead, html.theme-light thead tr, html.theme-light thead th {
+  background-color: var(--lc-raised) !important;
+  border-bottom: 1px solid var(--lc-line) !important;
+  color: var(--lc-muted) !important;
+  font-weight: 600 !important;
+}
+html.theme-dark tbody tr { border-bottom: 1px solid var(--lc-line) !important; }
+html.theme-light tbody tr { border-bottom: 1px solid var(--lc-line) !important; }
+html.theme-dark tbody tr:hover { background-color: rgb(255 255 255 / 0.025) !important; }
+html.theme-light tbody tr:hover { background-color: rgb(109 74 232 / 0.035) !important; }
+tbody tr { transition: background-color var(--dur-fast) var(--ease-out); }
+
+/* ---------- Inputs -------------------------------------------------------- */
+
+html.theme-dark input, html.theme-dark textarea, html.theme-dark select {
+  background-color: rgb(255 255 255 / 0.03) !important;
+  border: 1px solid var(--lc-line-strong) !important;
+  box-shadow: none !important;
+  font-weight: 500 !important;
+}
+html.theme-light input, html.theme-light textarea, html.theme-light select {
+  background-color: #fff !important;
+  border: 1px solid var(--lc-line-strong) !important;
+  box-shadow: none !important;
+  font-weight: 500 !important;
+}
+html.theme-light select:not(#lc) {
+  appearance: none !important;
+  background-color: #fff !important;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%235d5a6b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 0.85rem center !important;
+  padding-right: 2.5rem !important;
+  border: 1px solid var(--lc-line-strong) !important;
+  color: var(--lc-text) !important;
+}
+html.theme-dark input:focus, html.theme-dark textarea:focus, html.theme-dark select:focus,
+html.theme-light input:focus, html.theme-light textarea:focus, html.theme-light select:focus {
+  border-color: var(--lc-accent) !important;
+  box-shadow: 0 0 0 3px var(--lc-accent-soft) !important;
+}
+input, textarea, select {
+  transition: border-color var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
+}
+html.theme-dark input[type="checkbox"], html.theme-dark input[type="radio"],
+html.theme-light input[type="checkbox"], html.theme-light input[type="radio"] {
+  accent-color: var(--lc-accent) !important;
+}
+
+/* ---------- Modals -------------------------------------------------------- */
+
+html.theme-dark [class*="fixed inset-0"] {
+  background-color: rgb(6 5 10 / 0.72) !important;
+  backdrop-filter: blur(10px) saturate(120%) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(120%) !important;
+}
+html.theme-light [class*="fixed inset-0"] {
+  background-color: rgb(21 19 29 / 0.38) !important;
+  backdrop-filter: blur(10px) saturate(120%) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(120%) !important;
+}
+html.theme-dark .fixed.inset-0 > div {
+  background-color: var(--lc-surface) !important;
+  border: 1px solid var(--lc-line-strong) !important;
+  box-shadow: var(--lc-modal-shadow) !important;
+}
+html.theme-light .fixed.inset-0 > div {
+  background-color: var(--lc-surface) !important;
+  border: 1px solid var(--lc-line) !important;
+  box-shadow: var(--lc-modal-shadow) !important;
+}
+
+/* ---------- Motion -------------------------------------------------------- */
+
+@keyframes lc-fade { from { opacity: 0; } }
+@keyframes lc-pop {
+  from { opacity: 0; transform: translateY(10px) scale(0.975); }
+}
+
+/* Each page mounts a fresh child of <main>: let it settle in.
+   Opacity only, and `backwards` so nothing stays applied afterwards: an
+   animated transform on these containers would become the containing block
+   for the `position: fixed` dialogs rendered inside pages. */
+main > div {
+  animation: lc-fade var(--dur-slow) var(--ease-out) backwards;
+}
+main > div > :nth-child(2) { animation: lc-fade var(--dur-slow) var(--ease-out) 50ms backwards; }
+main > div > :nth-child(3) { animation: lc-fade var(--dur-slow) var(--ease-out) 100ms backwards; }
+main > div > :nth-child(4) { animation: lc-fade var(--dur-slow) var(--ease-out) 150ms backwards; }
+
+[class*="fixed inset-0"] {
+  animation: lc-fade var(--dur) var(--ease-out) both;
+}
+.fixed.inset-0 > div {
+  animation: lc-pop var(--dur-slow) var(--ease-out) both;
+}
+
+/* Theme switch cross-fades instead of snapping. */
+html, body, aside, main {
+  transition: background-color var(--dur) var(--ease-out), color var(--dur) var(--ease-out) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 1ms !important;
+  }
+}
+
+/* ---------- Browser surfaces ---------------------------------------------- */
+
+::selection {
+  background: rgb(139 108 246 / 0.32);
+  color: inherit;
+}
+input, textarea { caret-color: var(--lc-accent); }
+
+:focus-visible {
+  outline: 2px solid var(--lc-accent) !important;
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+:focus:not(:focus-visible) { outline: none; }
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--lc-line-strong) transparent;
+}
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background-color: var(--lc-line-strong);
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover { background-color: var(--lc-muted); }
