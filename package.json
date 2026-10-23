@@ -1,0 +1,13 @@
+{
+  "name": "lyncost",
+  "version": "0.1.9",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "echo 'Using production frontend in dist/'",
+    "tauri": "tauri"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2"
+  }
+}
