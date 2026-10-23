@@ -1,37 +1,76 @@
 # Lyncost
 
-100% Offline, Privacy-First Personal Finance & Investment Tracker for Linux.
-
+100% offline, privacy-first personal finance & investment tracker for Linux (Windows build planned).
 Built by **Wintershogun TechLabs**.
+
+Your data lives in a local SQLite database and never leaves your computer.
 
 ## Features
 
-- **Accounts & Net Worth:** Bank, Cash, Credit Card, Investment portfolios with automated net worth tracking and snapshots.
-- **Transactions & Ledger:** Categorized income and expenses, transfers, tags, and account ledgers.
-- **Budgets & Goals:** Target amounts, progress tracking, and spending envelopes.
-- **Debts & Loans:** Track principal, interest, payments, and draws.
-- **Investments:** Track stocks, mutual funds, crypto, and calculate profit/loss with historical price snapshots.
-- **Bills & Warranties:** Due date reminders and warranty expiry tracking.
-- **Shopping Lists & Calculator:** Built-in productivity tools.
-- **100% Offline & Private:** Powered by a local SQLite database (`lyncost.db`). Your financial data never leaves your computer.
+- **Accounts & net worth** — bank, cash, credit-card, investment and other accounts with a signed ledger, daily net-worth snapshots and multi-currency conversion.
+- **Transactions** — income, expenses and transfers with tags, pending/confirmed status, linked warranties and CSV import/export.
+- **Budgets & goals** — weekly/monthly/custom budgets with rollover and pace warnings; savings goals with deposits and withdrawals.
+- **Debts & loans** — drawdowns, repayments and credit-line spending with full history.
+- **Investments** — stocks, mutual funds and crypto with P/L in your base currency and price history.
+- **Bills, warranties, shopping list, recurring rules, calculators and reports.**
+- **Security & safety** — bcrypt-hashed 6-digit PIN with brute-force lockout, automatic daily backups, verified restore with a safety copy.
 
-## Installation on Fedora Linux
-
-Install the RPM package:
+## Install (Fedora / RHEL / openSUSE)
 
 ```bash
-sudo dnf install ./Lyncost-0.1.9-1.x86_64.rpm
+sudo dnf install ./Lyncost-0.2.0-1.x86_64.rpm
 ```
 
-Or run directly:
+Upgrading from an older Lyncost keeps your data: the database is migrated in place on first launch
+(existing PIN, accounts and history are preserved).
+
+## Where your data is
+
+| What | Linux path |
+| --- | --- |
+| Database | `~/.local/share/com.lyncost.desktop/lyncost.db` |
+| Automatic & manual backups | `~/.local/share/com.lyncost.desktop/backups/` |
+| CSV exports | `~/Downloads/` |
+
+## Development
+
+Requirements: Rust (stable), Node 18+, and on Fedora:
 
 ```bash
-npm run tauri dev
-```
-
-## Building
-
-```bash
+sudo dnf install webkit2gtk4.1-devel gtk3-devel libsoup3-devel openssl-devel librsvg2-devel
 npm install
-npm run tauri build -- --bundles rpm
+npm run dev          # run the app
+npm test             # Rust unit + IPC contract tests, then the frontend/backend contract check
+npm run build:rpm    # -> src-tauri/target/release/bundle/rpm/
 ```
+
+### Project layout
+
+```
+dist/                     Prebuilt frontend (React/Vite bundle). Its source was lost; see note below.
+src-tauri/
+  src/lib.rs              App setup, plugins and the list of commands exposed to the frontend
+  src/commands/           One file per feature (accounts, transactions, budgets, bills, …)
+  src/db/                 Connection, versioned migrations (migrations/*.sql) and seed data
+  src/ledger.rs           Account ledger: every balance change is a signed ledger row
+  src/fx.rs               Currency conversion through the exchange-rate table
+  src/security.rs         PIN hashing and lockout
+  src/contract_tests.rs   End-to-end tests through Tauri IPC with the frontend's exact payloads
+packaging/linux/          Desktop entry template and AppStream metainfo
+scripts/
+  check-ipc-contract.py   Verifies every frontend invoke() matches a Rust command and its arguments
+  set-version.py          Bumps the version everywhere (incl. labels inside dist/)
+version.json              Update manifest read by the in-app update check
+```
+
+**About `dist/`:** the original frontend source is gone; `dist/` is the original production build
+recovered from the released app (its asset hashes match the original Windows release exactly).
+The backend was rebuilt to match it. Treat `dist/` as read-only except through `scripts/set-version.py`,
+and run `python3 scripts/check-ipc-contract.py` after any backend change.
+
+## Releasing
+
+1. `python3 scripts/set-version.py X.Y.Z`
+2. Update `CHANGELOG.md` and `version.json`.
+3. `npm test && npm run build:rpm`
+4. Commit, tag `vX.Y.Z`, push; attach the packages to the GitHub release.

@@ -1,13 +1,18 @@
 {
   "name": "lyncost",
-  "version": "0.1.9",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "echo 'Using production frontend in dist/'",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "dev": "tauri dev",
+    "build:rpm": "tauri build --bundles rpm",
+    "build:deb": "tauri build --bundles deb",
+    "build:linux": "tauri build --bundles rpm,deb,appimage",
+    "test": "cargo test --manifest-path src-tauri/Cargo.toml && python3 scripts/check-ipc-contract.py"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^2"
-  }
+  },
+  "description": "Lyncost — offline, privacy-first personal finance & investment tracker"
 }
