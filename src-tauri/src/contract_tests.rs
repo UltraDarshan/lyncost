@@ -201,6 +201,7 @@ fn categories_budgets_and_month_summary() {
             "end_date": null, "rollover": false, "category_ids": [coffee]}}),
     );
     assert_eq!(budget["spent"], 0.0);
+    assert_eq!(budget["rollover"], false, "rollover must be a bool for the UI");
     assert!(h.err("create_budget", json!({"payload": {"name": "X", "amount": 10, "period": "monthly", "category_ids": []}})).contains("category"));
 
     h.ok("create_transaction", json!({"payload": {"account_id": bank, "type": "expense", "category_id": coffee, "amount": 250, "txn_date": today_str(), "is_confirmed": true, "tags": []}}));
@@ -285,6 +286,9 @@ fn debts_goals_and_investments() {
     h.ok("update_debt", json!({"id": debt_id, "payload": {"name": "Car Loan", "principal": 100000, "current_balance": 55500, "total_borrowed": 65500,
         "total_paid": 10000, "debt_type": "auto_loan", "interest_rate": 9.5, "due_date": null, "min_payment": 5000, "account_id": bank, "notes": "", "is_active": 0}}));
     assert_eq!(h.ok("get_debts", json!({}))[0]["is_active"], 0);
+    let no_min = h.ok("create_debt", json!({"payload": {"name": "Friend", "principal": 500, "initial_draw": 500, "debt_type": "friend_family", "min_payment": 0}}));
+    assert_eq!(no_min["min_payment"], Value::Null, "unset minimum must be null for the UI");
+    h.ok("delete_debt", json!({"id": no_min["id"]}));
 
     let goal = h.ok("create_goal", json!({"payload": {"name": "Trip", "target_amount": 1000, "current_amount": 200, "target_date": null, "account_id": null, "color": "#9333ea", "icon": "target", "note": null}}));
     let goal_id = goal["id"].as_i64().unwrap();
