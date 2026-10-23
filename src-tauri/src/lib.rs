@@ -1,124 +1,157 @@
-pub mod db;
-pub mod commands;
+//! Lyncost: offline, privacy-first personal finance tracker.
 
-use std::sync::Mutex;
-use rusqlite::Connection;
+mod commands;
+mod db;
+mod fx;
+mod ledger;
+mod security;
+mod util;
 
-pub struct AppState {
-    pub db: Mutex<Connection>,
-}
+#[cfg(test)]
+mod contract_tests;
+
+use tauri::{Manager, Runtime};
+
+use commands::*;
+use db::AppState;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    let conn = db::init_db().expect("failed to initialize sqlite database");
+    #[cfg(target_os = "linux")]
+    linux_webkit_workarounds();
 
     tauri::Builder::default()
-        .manage(AppState {
-            db: Mutex::new(conn),
-        })
+        .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
+            if let Some(window) = app.get_webview_window("main") {
+                let _ = window.unminimize();
+                let _ = window.set_focus();
+            }
+        }))
         .plugin(tauri_plugin_opener::init())
-        .plugin(tauri_plugin_dialog::init())
-        .invoke_handler(tauri::generate_handler![
-            commands::get_startup_status,
-            commands::get_app_settings,
-            commands::set_app_theme,
-            commands::set_base_currency,
-            commands::set_initial_pin,
-            commands::verify_pin,
-            commands::change_pin,
-            commands::get_trial_status,
-            commands::verify_license_key,
-            commands::check_app_update,
-            commands::install_app_update,
-            commands::restart_application,
-            commands::wipe_all_data,
-            commands::get_accounts,
-            commands::create_account,
-            commands::update_account,
-            commands::delete_account,
-            commands::archive_account,
-            commands::get_account_ledger,
-            commands::get_transactions,
-            commands::create_transaction,
-            commands::update_transaction,
-            commands::delete_transaction,
-            commands::get_tags,
-            commands::import_csv_transactions,
-            commands::get_categories,
-            commands::create_category,
-            commands::update_category,
-            commands::delete_category,
-            commands::get_budgets,
-            commands::create_budget,
-            commands::update_budget,
-            commands::delete_budget,
-            commands::get_month_summary,
-            commands::get_goals,
-            commands::create_goal,
-            commands::update_goal,
-            commands::delete_goal,
-            commands::contribute_to_goal,
-            commands::get_debts,
-            commands::create_debt,
-            commands::update_debt,
-            commands::delete_debt,
-            commands::spend_from_debt,
-            commands::draw_debt_funds,
-            commands::record_debt_payment,
-            commands::get_debt_transactions,
-            commands::get_holdings,
-            commands::create_holding,
-            commands::update_holding,
-            commands::delete_holding,
-            commands::archive_holding,
-            commands::update_holding_price,
-            commands::bulk_update_holding_prices,
-            commands::get_holding_price_history,
-            commands::get_portfolio_summary,
-            commands::get_bills,
-            commands::create_bill,
-            commands::update_bill,
-            commands::delete_bill,
-            commands::mark_bill_paid,
-            commands::unmark_bill_paid,
-            commands::get_warranties,
-            commands::create_warranty,
-            commands::update_warranty,
-            commands::delete_warranty,
-            commands::get_shopping_items,
-            commands::create_shopping_item,
-            commands::update_shopping_item,
-            commands::delete_shopping_item,
-            commands::toggle_shopping_item,
-            commands::clear_completed_shopping_items,
-            commands::get_recurring_rules,
-            commands::create_recurring_rule,
-            commands::update_recurring_rule,
-            commands::delete_recurring_rule,
-            commands::process_recurring_rules,
-            commands::get_exchange_rates,
-            commands::set_exchange_rate,
-            commands::delete_exchange_rate,
-            commands::get_payment_methods,
-            commands::create_payment_method,
-            commands::update_payment_method,
-            commands::delete_payment_method,
-            commands::apply_regional_payment_presets,
-            commands::get_net_worth_summary,
-            commands::get_net_worth_history,
-            commands::record_net_worth_snapshot,
-            commands::check_and_snapshot_net_worth,
-            commands::get_income_expense_trend,
-            commands::get_category_spending_report,
-            commands::get_investment_performance_report,
-            commands::check_and_send_due_reminders,
-            commands::send_os_desktop_notification,
-            commands::update_notification_settings,
-            commands::check_and_run_daily_backup,
-            commands::create_backup,
-            commands::restore_backup,
-            commands::get_backups_list,
-        ])
+        .plugin(tauri_plugin_notification::init())
+        .setup(|app| {
+            let data_dir = app.path().app_data_dir()?;
+            app.manage(AppState::new(data_dir));
+            Ok(())
+        })
+        .invoke_handler(handlers())
         .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+        .expect("error while running Lyncost");
+}
+
+/// Every command the frontend can invoke. Generic so tests can use the mock runtime.
+fn handlers<R: Runtime>() -> impl Fn(tauri::ipc::Invoke<R>) -> bool + Send + Sync + 'static {
+    tauri::generate_handler![
+        settings::get_startup_status,
+        settings::get_app_settings,
+        settings::set_app_theme,
+        settings::set_base_currency,
+        settings::set_initial_pin,
+        settings::verify_pin,
+        settings::change_pin,
+        settings::update_notification_settings,
+        settings::wipe_all_data,
+        system::get_trial_status,
+        system::verify_license_key,
+        system::check_app_update,
+        system::install_app_update,
+        system::restart_application,
+        accounts::get_accounts,
+        accounts::create_account,
+        accounts::update_account,
+        accounts::delete_account,
+        accounts::archive_account,
+        accounts::get_account_ledger,
+        transactions::get_transactions,
+        transactions::create_transaction,
+        transactions::update_transaction,
+        transactions::delete_transaction,
+        transactions::get_tags,
+        transactions::import_csv_transactions,
+        categories::get_categories,
+        categories::create_category,
+        categories::update_category,
+        categories::delete_category,
+        budgets::get_budgets,
+        budgets::create_budget,
+        budgets::update_budget,
+        budgets::delete_budget,
+        budgets::get_month_summary,
+        goals::get_goals,
+        goals::create_goal,
+        goals::update_goal,
+        goals::delete_goal,
+        goals::contribute_to_goal,
+        debts::get_debts,
+        debts::create_debt,
+        debts::update_debt,
+        debts::delete_debt,
+        debts::spend_from_debt,
+        debts::draw_debt_funds,
+        debts::record_debt_payment,
+        debts::get_debt_transactions,
+        investments::get_holdings,
+        investments::create_holding,
+        investments::update_holding,
+        investments::delete_holding,
+        investments::archive_holding,
+        investments::update_holding_price,
+        investments::bulk_update_holding_prices,
+        investments::get_holding_price_history,
+        investments::get_portfolio_summary,
+        investments::get_investment_performance_report,
+        bills::get_bills,
+        bills::create_bill,
+        bills::update_bill,
+        bills::delete_bill,
+        bills::mark_bill_paid,
+        bills::unmark_bill_paid,
+        warranties::get_warranties,
+        warranties::create_warranty,
+        warranties::update_warranty,
+        warranties::delete_warranty,
+        shopping::get_shopping_items,
+        shopping::create_shopping_item,
+        shopping::update_shopping_item,
+        shopping::delete_shopping_item,
+        shopping::toggle_shopping_item,
+        shopping::clear_completed_shopping_items,
+        recurring::get_recurring_rules,
+        recurring::create_recurring_rule,
+        recurring::update_recurring_rule,
+        recurring::delete_recurring_rule,
+        recurring::process_recurring_rules,
+        currency::get_exchange_rates,
+        currency::set_exchange_rate,
+        currency::delete_exchange_rate,
+        payment_methods::get_payment_methods,
+        payment_methods::create_payment_method,
+        payment_methods::update_payment_method,
+        payment_methods::delete_payment_method,
+        payment_methods::apply_regional_payment_presets,
+        reports::get_net_worth_summary,
+        reports::get_net_worth_history,
+        reports::record_net_worth_snapshot,
+        reports::check_and_snapshot_net_worth,
+        reports::get_income_expense_trend,
+        reports::get_category_spending_report,
+        reminders::check_and_send_due_reminders,
+        reminders::send_os_desktop_notification,
+        backup::check_and_run_daily_backup,
+        backup::create_backup,
+        backup::restore_backup,
+        backup::get_backups_list,
+        backup::save_export_file,
+        ]
+}
+
+/// WebKitGTK's DMA-BUF renderer shows a blank window with the proprietary
+/// NVIDIA driver. Respect any value the user already set.
+#[cfg(target_os = "linux")]
+fn linux_webkit_workarounds() {
+    let nvidia = std::path::Path::new("/proc/driver/nvidia").exists();
+    if nvidia && std::env::var_os("WEBKIT_DISABLE_DMABUF_RENDERER").is_none() {
+        // SAFETY: called before any threads are spawned.
+        unsafe { std::env::set_var("WEBKIT_DISABLE_DMABUF_RENDERER", "1") };
+    }
 }
