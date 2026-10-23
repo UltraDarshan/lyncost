@@ -1,4 +1,7 @@
 node_modules/
 src-tauri/target/
 *.rpm
+*.deb
+*.AppImage
+*.exe
 .DS_Store
