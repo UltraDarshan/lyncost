@@ -19,7 +19,8 @@ pub struct Budget {
     period: String,
     start_date: String,
     end_date: Option<String>,
-    rollover: i64,
+    /// bool, not 0/1: the UI renders `rollover && <badge>`, which would print a stray "0".
+    rollover: bool,
     is_active: i64,
     category_ids: Vec<i64>,
     category_names: Vec<String>,
@@ -133,7 +134,7 @@ fn build(conn: &Connection, b: BudgetRow) -> CmdResult<Budget> {
         period: b.period,
         start_date: b.start_date,
         end_date: b.end_date,
-        rollover: b.rollover,
+        rollover: b.rollover != 0,
         is_active: b.is_active,
         category_ids,
         category_names,

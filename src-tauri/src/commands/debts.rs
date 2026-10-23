@@ -23,14 +23,15 @@ pub struct Debt {
     debt_type: String,
     interest_rate: f64,
     due_date: Option<String>,
-    min_payment: f64,
+    /// None when unset: the UI renders `min_payment && …`, which would print a stray "0".
+    min_payment: Option<f64>,
     account_id: Option<i64>,
     notes: Option<String>,
     is_active: i64,
 }
 
 const DEBT_COLUMNS: &str = "id, name, principal, current_balance, COALESCE(total_borrowed, 0), COALESCE(total_paid, 0),
-    COALESCE(debt_type, 'personal_loan'), COALESCE(interest_rate, 0), due_date, COALESCE(min_payment, 0),
+    COALESCE(debt_type, 'personal_loan'), COALESCE(interest_rate, 0), due_date, min_payment,
     account_id, notes, COALESCE(is_active, 1)";
 
 fn map_debt(r: &Row) -> rusqlite::Result<Debt> {
@@ -44,7 +45,7 @@ fn map_debt(r: &Row) -> rusqlite::Result<Debt> {
         debt_type: r.get(6)?,
         interest_rate: r.get(7)?,
         due_date: r.get(8)?,
-        min_payment: r.get(9)?,
+        min_payment: r.get::<_, Option<f64>>(9)?.filter(|m| *m > 0.0),
         account_id: r.get(10)?,
         notes: r.get(11)?,
         is_active: r.get(12)?,
@@ -124,7 +125,7 @@ pub fn create_debt(payload: DebtPayload, state: State<'_, AppState>) -> CmdResul
             payload.debt_type.as_deref().unwrap_or("personal_loan"),
             payload.interest_rate.unwrap_or(0.0),
             payload.due_date,
-            payload.min_payment.unwrap_or(0.0),
+            payload.min_payment.filter(|m| *m > 0.0),
             account_id,
             payload.notes
         ],
@@ -168,7 +169,7 @@ pub fn update_debt(id: i64, payload: DebtPayload, state: State<'_, AppState>) ->
             payload.debt_type.as_deref().unwrap_or(&existing.debt_type),
             payload.interest_rate.unwrap_or(existing.interest_rate),
             payload.due_date,
-            payload.min_payment.unwrap_or(existing.min_payment),
+            payload.min_payment.or(existing.min_payment).filter(|m| *m > 0.0),
             payload.account_id,
             payload.notes,
             payload.is_active.unwrap_or(existing.is_active != 0),
