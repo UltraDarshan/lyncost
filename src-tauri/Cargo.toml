@@ -1,6 +1,6 @@
 [package]
 name = "lyncost"
-version = "0.2.2"
+version = "0.2.3"
 description = "Lyncost - 100% Offline, Privacy-First Personal Finance & Investment Tracker"
 authors = ["Wintershogun TechLabs"]
 license = "LicenseRef-Proprietary"

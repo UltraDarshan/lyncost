@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.2.3 — 2026-10-23
+
+Wintershogun house style.
+
+- Fonts from wintershogun.com: Plus Jakarta Sans for text and Shippori Mincho for headings
+  (bundled, offline). Fixed a bundle rule that silently forced the generic system font on all
+  body text, which is why text looked thin and old.
+- Larger, firmer small text (labels, table cells, captions), with large figures sized to fit.
+- "Snow / frost" palette from the website: slate night backgrounds, frost-blue accents and charts.
+- Dashboard: stat tiles reflow 2 x 2 in narrow cards so amounts never clip; hero card fixed in
+  dark mode; soft dividers instead of hard black lines in light mode.
+
 ## 0.2.2 — 2026-10-23
 
 - Fixed flicker when switching pages: every page now preloads at startup, so switching is

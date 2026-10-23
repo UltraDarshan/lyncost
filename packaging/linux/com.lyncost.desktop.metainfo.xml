@@ -37,6 +37,11 @@
   </keywords>
   <content_rating type="oars-1.1"/>
   <releases>
+    <release version="0.2.3" date="2026-10-23">
+      <description>
+        <p>Wintershogun house style: website fonts and frost palette, larger and clearer text.</p>
+      </description>
+    </release>
     <release version="0.2.2" date="2026-10-23">
       <description>
         <p>Smoother, flicker-free page switching.</p>
