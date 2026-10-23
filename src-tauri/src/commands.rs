@@ -105,11 +105,8 @@ pub fn get_trial_status() -> Value {
 }
 
 #[tauri::command]
-pub fn verify_license_key(key: String) -> Value {
-    json!({
-        "valid": true,
-        "message": format!("Activated: {}", key)
-    })
+pub fn verify_license_key(_key: String) -> bool {
+    true
 }
 
 #[tauri::command]
@@ -1024,8 +1021,8 @@ pub fn delete_recurring_rule(id: i64, state: State<'_, AppState>) -> CmdResult<(
 }
 
 #[tauri::command]
-pub fn process_recurring_rules() -> CmdResult<()> {
-    Ok(())
+pub fn process_recurring_rules() -> CmdResult<i64> {
+    Ok(0)
 }
 
 // --- EXCHANGE RATES ---
@@ -1110,7 +1107,7 @@ pub fn delete_payment_method(id: i64, state: State<'_, AppState>) -> CmdResult<(
 }
 
 #[tauri::command]
-pub fn apply_regional_payment_presets(currency: String, state: State<'_, AppState>) -> CmdResult<()> {
+pub fn apply_regional_payment_presets(currency: String, state: State<'_, AppState>) -> CmdResult<Vec<Value>> {
     let conn = state.db.lock().map_err(|e| e.to_string())?;
     if currency == "INR" {
         let presets = [
@@ -1125,7 +1122,8 @@ pub fn apply_regional_payment_presets(currency: String, state: State<'_, AppStat
             );
         }
     }
-    Ok(())
+    drop(conn);
+    get_payment_methods(state)
 }
 
 // --- NET WORTH & REPORTS ---
@@ -1191,7 +1189,7 @@ pub fn record_net_worth_snapshot(snapshotDate: Option<String>, state: State<'_, 
 }
 
 #[tauri::command]
-pub fn check_and_snapshot_net_worth(state: State<'_, AppState>) -> CmdResult<()> {
+pub fn check_and_snapshot_net_worth(state: State<'_, AppState>) -> CmdResult<bool> {
     let today = chrono::Local::now().format("%Y-%m-%d").to_string();
     let conn = state.db.lock().map_err(|e| e.to_string())?;
     let count: i64 = conn.query_row(
@@ -1203,8 +1201,10 @@ pub fn check_and_snapshot_net_worth(state: State<'_, AppState>) -> CmdResult<()>
 
     if count == 0 {
         let _ = record_net_worth_snapshot(Some(today), state);
+        Ok(true)
+    } else {
+        Ok(false)
     }
-    Ok(())
 }
 
 #[tauri::command]
@@ -1243,8 +1243,10 @@ pub fn get_investment_performance_report(state: State<'_, AppState>) -> CmdResul
 // --- NOTIFICATIONS & BACKUPS ---
 
 #[tauri::command]
-pub fn check_and_send_due_reminders() -> CmdResult<()> {
-    Ok(())
+pub fn check_and_send_due_reminders(state: State<'_, AppState>) -> CmdResult<Vec<Value>> {
+    let conn = state.db.lock().map_err(|e| e.to_string())?;
+    let mut stmt = conn.prepare("SELECT * FROM bills WHERE is_paid = 0 ORDER BY due_date ASC").map_err(|e| e.to_string())?;
+    rows_to_json(&mut stmt, &[]).map_err(|e| e.to_string())
 }
 
 #[tauri::command]
@@ -1254,13 +1256,13 @@ pub fn send_os_desktop_notification(title: String, body: String) -> CmdResult<()
 }
 
 #[tauri::command]
-pub fn update_notification_settings(_payload: Value) -> CmdResult<()> {
-    Ok(())
+pub fn update_notification_settings(_payload: Value, state: State<'_, AppState>) -> CmdResult<Value> {
+    get_app_settings(state)
 }
 
 #[tauri::command]
-pub fn check_and_run_daily_backup() -> CmdResult<()> {
-    Ok(())
+pub fn check_and_run_daily_backup() -> CmdResult<bool> {
+    Ok(false)
 }
 
 #[tauri::command]
