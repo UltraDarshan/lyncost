@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "Lyncost",
-  "version": "0.1.9",
+  "version": "../package.json",
   "identifier": "com.lyncost.desktop",
   "build": {
     "frontendDist": "../dist"
@@ -20,22 +20,48 @@
       }
     ],
     "security": {
-      "csp": null
+      "csp": "default-src 'self' ipc: http://ipc.localhost; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: asset: http://asset.localhost; font-src 'self' data:; connect-src 'self' ipc: http://ipc.localhost; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'"
     }
   },
   "bundle": {
     "active": true,
-    "targets": ["rpm", "deb", "appimage"],
+    "targets": "all",
     "icon": [
       "icons/32x32.png",
+      "icons/64x64.png",
       "icons/128x128.png",
-      "icons/128x128@2x.png",
+      "icons/256x256.png",
+      "icons/icon.png",
       "icons/icon.icns",
       "icons/icon.ico"
     ],
     "category": "Finance",
-    "shortDescription": "100% Offline, Privacy-First Personal Finance & Investment Tracker",
+    "shortDescription": "Offline, privacy-first personal finance & investment tracker",
+    "longDescription": "Lyncost tracks accounts, transactions, budgets, goals, debts, investments, bills and warranties entirely offline. Your financial data stays in a local SQLite database on your computer and never leaves it.",
     "publisher": "Wintershogun TechLabs",
-    "copyright": "© 2026 Wintershogun TechLabs"
+    "copyright": "© 2026 Wintershogun TechLabs",
+    "homepage": "https://github.com/UltraDarshan/lyncost",
+    "license": "LicenseRef-Proprietary",
+    "linux": {
+      "rpm": {
+        "release": "1",
+        "desktopTemplate": "../packaging/linux/lyncost.desktop.hbs",
+        "files": {
+          "/usr/share/metainfo/com.lyncost.desktop.metainfo.xml": "../packaging/linux/com.lyncost.desktop.metainfo.xml"
+        }
+      },
+      "deb": {
+        "section": "utils",
+        "desktopTemplate": "../packaging/linux/lyncost.desktop.hbs",
+        "files": {
+          "/usr/share/metainfo/com.lyncost.desktop.metainfo.xml": "../packaging/linux/com.lyncost.desktop.metainfo.xml"
+        }
+      }
+    },
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser"
+      }
+    }
   }
 }
