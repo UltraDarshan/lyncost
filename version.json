@@ -1,6 +1,6 @@
 {
-  "version": "0.2.1",
-  "notes": "New premium look, clearer wording, and several display fixes.",
+  "version": "0.2.2",
+  "notes": "Smoother, flicker-free page switching.",
   "release_date": "2026-10-23",
-  "release_url": "https://github.com/UltraDarshan/lyncost/releases/tag/v0.2.1"
+  "release_url": "https://github.com/UltraDarshan/lyncost/releases/tag/v0.2.2"
 }

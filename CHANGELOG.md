@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.2 — 2026-10-23
+
+- Fixed flicker when switching pages: every page now preloads at startup, so switching is
+  instant (no blank spinner on first visit), and the page fade-in was removed.
+
 ## 0.2.1 — 2026-10-23
 
 Design polish and full UI QA.

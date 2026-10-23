@@ -18,7 +18,7 @@ Your data lives in a local SQLite database and never leaves your computer.
 ## Install (Fedora / RHEL / openSUSE)
 
 ```bash
-sudo dnf install ./Lyncost-0.2.1-1.x86_64.rpm
+sudo dnf install ./Lyncost-0.2.2-1.x86_64.rpm
 ```
 
 Upgrading from an older Lyncost keeps your data: the database is migrated in place on first launch

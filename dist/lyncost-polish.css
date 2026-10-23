@@ -394,16 +394,9 @@ html.theme-light .fixed.inset-0 > div {
   from { opacity: 0; transform: translateY(10px) scale(0.975); }
 }
 
-/* Each page mounts a fresh child of <main>: let it settle in.
-   Opacity only, and `backwards` so nothing stays applied afterwards: an
-   animated transform on these containers would become the containing block
-   for the `position: fixed` dialogs rendered inside pages. */
-main > div {
-  animation: lc-fade var(--dur-slow) var(--ease-out) backwards;
-}
-main > div > :nth-child(2) { animation: lc-fade var(--dur-slow) var(--ease-out) 50ms backwards; }
-main > div > :nth-child(3) { animation: lc-fade var(--dur-slow) var(--ease-out) 100ms backwards; }
-main > div > :nth-child(4) { animation: lc-fade var(--dur-slow) var(--ease-out) 150ms backwards; }
+/* Page switches are instant on purpose: pages are preloaded at startup
+   (see the lazy-loader patch in index-*.js), and fading each new page in
+   read as a flicker. Motion is kept for dialogs, hovers and theme changes. */
 
 [class*="fixed inset-0"] {
   animation: lc-fade var(--dur) var(--ease-out) both;
