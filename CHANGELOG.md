@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.2.1 — 2026-10-23
+
+Design polish and full UI QA.
+
+- New look: Manrope typeface (bundled, works offline) with aligned money figures; calmer, richer
+  colors; soft shadows instead of neon glows; smooth page, dialog and theme transitions;
+  themed scrollbars, focus rings and selection; content centered on wide screens.
+- Branding: "Created by Wintershogun TechLabs", GitHub link, "Proudly built on Fedora".
+- Clearer wording in place of technical jargon on the dashboard, transactions and the
+  new-transaction dialog.
+- Fixed: stray "0" on budgets without rollover and on loans without a minimum payment.
+- Fixed: red/green/amber action buttons (Delete, Repay…) were unreadable in dark mode.
+- Fixed: faint warning and red/green text in light mode; grey native dropdowns in light mode.
+- Update banner "download" link now opens GitHub Releases.
+
 ## 0.2.0 — 2026-10-23
 
 Rebuilt the Rust backend for the recovered frontend, matching the original app's behaviour.
