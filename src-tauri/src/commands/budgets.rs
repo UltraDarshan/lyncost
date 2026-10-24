@@ -316,8 +316,7 @@ pub struct MonthSummary {
 #[tauri::command]
 pub fn get_month_summary(month: Option<String>, state: State<'_, AppState>) -> CmdResult<MonthSummary> {
     let month = month
-        .filter(|m| m.len() >= 7)
-        .map(|m| m[..7].to_string())
+        .and_then(|m| m.get(..7).map(str::to_string))
         .unwrap_or_else(|| today().format("%Y-%m").to_string());
     let like = format!("{month}%");
     let conn = state.conn()?;

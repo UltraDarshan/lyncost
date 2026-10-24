@@ -13,6 +13,7 @@ use crate::util::{CmdResult, Ctx};
 
 const BACKUP_PREFIX: &str = "lyncost_";
 const PRE_RESTORE_PREFIX: &str = "lyncost_pre_restore_";
+const PRE_WIPE_PREFIX: &str = "lyncost_pre_wipe_";
 /// Automatic daily backups kept in the app's backups folder (manual ones are never pruned).
 const KEEP_AUTO_BACKUPS: usize = 14;
 const AUTO_BACKUP_INTERVAL_HOURS: i64 = 24;
@@ -35,6 +36,12 @@ fn vacuum_into(conn: &Connection, dest: &Path) -> CmdResult<()> {
     conn.execute("VACUUM INTO ?1", params![dest.to_string_lossy()])
         .map_err(|e| format!("Failed to write backup to {}: {e}", dest.display()))?;
     Ok(())
+}
+
+/// Safety copy taken right before all data is erased (Forgot PIN / Reset App Data),
+/// so a wipe done by mistake can be undone from the backups list.
+pub fn write_pre_wipe_backup(state: &AppState, conn: &Connection) -> CmdResult<PathBuf> {
+    write_backup(conn, &backups_dir(state)?, PRE_WIPE_PREFIX)
 }
 
 fn write_backup(conn: &Connection, folder: &Path, prefix: &str) -> CmdResult<PathBuf> {

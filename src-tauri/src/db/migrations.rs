@@ -156,6 +156,49 @@ mod tests {
         run(&mut conn).unwrap();
     }
 
+    /// A database written by the original Lyncost (Windows/Linux 0.1.x): migrations
+    /// 001-009 recorded, bcrypt PIN, signed ledger, extended debt columns.
+    #[test]
+    fn original_app_database_upgrades_without_touching_data() {
+        let mut conn = Connection::open_in_memory().unwrap();
+        conn.execute_batch(
+            "CREATE TABLE schema_migrations (version INTEGER PRIMARY KEY, applied_at TEXT DEFAULT CURRENT_TIMESTAMP);",
+        )
+        .unwrap();
+        for (version, step) in MIGRATIONS.iter().filter(|(v, _)| *v <= 9) {
+            if let Step::Sql(sql) = step {
+                apply(&mut conn, *version, sql).unwrap();
+            }
+        }
+        let hash = bcrypt::hash("482916", 4).unwrap();
+        conn.execute_batch(&format!(
+            "INSERT INTO app_settings (id, base_currency, pin_hash, theme) VALUES (1, 'INR', '{hash}', 'dark');
+             INSERT INTO accounts (id, name, type, opening_balance, current_balance) VALUES (1, 'SBI', 'bank', 1000, 700);
+             INSERT INTO transactions (id, account_id, type, amount, base_amount, txn_date) VALUES (1, 1, 'expense', 300, 300, '2026-09-01');
+             INSERT INTO account_ledger (account_id, txn_type, amount, balance_after, reference_type, reference_id)
+                 VALUES (1, 'opening', 1000, 1000, 'account', 1), (1, 'expense', -300, 700, 'transaction', 1);
+             INSERT INTO debts (name, principal, current_balance, total_borrowed, total_paid, debt_type, min_payment)
+                 VALUES ('Car', 500000, 400000, 500000, 100000, 'mortgage_auto', 12000);
+             INSERT INTO bills (name, amount, due_date, is_paid, recurrence) VALUES ('Rent', 9000, '2026-10-01', 1, 'monthly');"
+        ))
+        .unwrap();
+
+        run(&mut conn).unwrap();
+
+        let v: i64 = conn.query_row("SELECT MAX(version) FROM schema_migrations", [], |r| r.get(0)).unwrap();
+        assert_eq!(v, MIGRATIONS.last().unwrap().0);
+        let stored: String = conn.query_row("SELECT pin_hash FROM app_settings", [], |r| r.get(0)).unwrap();
+        assert_eq!(stored, hash, "an existing bcrypt PIN is left exactly as it was");
+        let (bal, rows): (f64, i64) = conn
+            .query_row("SELECT current_balance, (SELECT COUNT(*) FROM account_ledger) FROM accounts", [], |r| Ok((r.get(0)?, r.get(1)?)))
+            .unwrap();
+        assert_eq!((bal, rows), (700.0, 2), "versioned databases are not rebuilt");
+        let (paid_txn, min): (Option<i64>, f64) = conn
+            .query_row("SELECT paid_transaction_id, (SELECT min_payment FROM debts) FROM bills", [], |r| Ok((r.get(0)?, r.get(1)?)))
+            .unwrap();
+        assert_eq!((paid_txn, min), (None, 12000.0));
+    }
+
     #[test]
     fn unversioned_rebuild_database_is_repaired() {
         let mut conn = Connection::open_in_memory().unwrap();
