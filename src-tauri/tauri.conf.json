@@ -40,7 +40,7 @@
     "longDescription": "Lyncost tracks accounts, transactions, budgets, goals, debts, investments, bills and warranties entirely offline. Your financial data stays in a local SQLite database on your computer and never leaves it.",
     "publisher": "Wintershogun TechLabs",
     "copyright": "© 2026 Wintershogun TechLabs",
-    "homepage": "https://github.com/UltraDarshan/lyncost",
+    "homepage": "https://lyncost.wintershogun.com",
     "license": "LicenseRef-Proprietary",
     "linux": {
       "rpm": {

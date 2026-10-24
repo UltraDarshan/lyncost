@@ -1,7 +1,7 @@
 # Lyncost
 
 100% offline, privacy-first personal finance & investment tracker for Linux (Windows build planned).
-Built by **Wintershogun TechLabs**.
+Built by **Wintershogun TechLabs** · Website: **https://lyncost.wintershogun.com**
 
 Your data lives in a local SQLite database and never leaves your computer.
 
@@ -102,3 +102,14 @@ and run `python3 scripts/check-ipc-contract.py` after any backend change.
 2. Update `CHANGELOG.md` and `version.json`.
 3. `npm test && npm run build:rpm`
 4. Commit, tag `vX.Y.Z`, push; attach the packages to the GitHub release.
+
+## License
+
+Lyncost is **source-available, not open source**. The code is public so you can see how it works
+and check that it keeps your data private, but all rights belong to Wintershogun TechLabs.
+
+- The official **Linux** builds are free for everyone, for personal and business use.
+- The **Windows** edition (coming soon) is a one-time purchase: ₹799 in India, US$10 elsewhere.
+- You may not copy, modify, build, or redistribute the code. Pull requests are not accepted unless invited.
+
+See [LICENSE](LICENSE) or https://lyncost.wintershogun.com/license for the full terms.
