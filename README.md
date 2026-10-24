@@ -29,11 +29,11 @@ otherwise an AppImage in your home folder (no sudo needed). Options:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/UltraDarshan/lyncost/main/install.sh | sh -s -- --appimage        # always use the AppImage
-curl -fsSL https://raw.githubusercontent.com/UltraDarshan/lyncost/main/install.sh | sh -s -- --version 0.2.4   # a specific release
+curl -fsSL https://raw.githubusercontent.com/UltraDarshan/lyncost/main/install.sh | sh -s -- --version 0.2.5   # a specific release
 ```
 
 Or download a package from [Releases](https://github.com/UltraDarshan/lyncost/releases/latest) and install it yourself,
-e.g. `sudo dnf install ./Lyncost-0.2.4-1.x86_64.rpm`.
+e.g. `sudo dnf install ./Lyncost-0.2.5-1.x86_64.rpm`.
 
 Upgrading from an older Lyncost keeps your data: the database is migrated in place on first launch
 (existing PIN, accounts and history are preserved).
@@ -86,7 +86,8 @@ packaging/linux/          Desktop entry template and AppStream metainfo
 scripts/
   check-ipc-contract.py   Verifies every frontend invoke() matches a Rust command and its arguments
   set-version.py          Bumps the version everywhere (incl. labels inside dist/)
-  qa/                     Hidden-display UI QA: env.sh (Xvfb + tauri-driver), seed.py, capture.py
+  qa/                     Hidden-display UI QA: env.sh (Xvfb + tauri-driver), seed.py,
+                          flows.py (every feature), layout_check.py (wraps/overflow), capture.py
 version.json              Update manifest read by the in-app update check
 ```
 
