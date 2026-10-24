@@ -1,7 +1,9 @@
 # Changelog
 
-## Unreleased
+## 0.2.4 — 2026-10-24
 
+- New accent color: Iris (blue-violet), replacing the muted steel blue. Chosen to stay clear of the
+  money colors (green income, red expense, amber warnings) and to read well in light and dark mode.
 - One-line installer (`install.sh`) and uninstaller (`uninstall.sh`): picks rpm / deb / AppImage,
   verifies SHA256 checksums, keeps user data on uninstall unless `--purge` is confirmed.
 
