@@ -15,14 +15,40 @@ Your data lives in a local SQLite database and never leaves your computer.
 - **Bills, warranties, shopping list, recurring rules, calculators and reports.**
 - **Security & safety** — bcrypt-hashed 6-digit PIN with brute-force lockout, automatic daily backups, verified restore with a safety copy.
 
-## Install (Fedora / RHEL / openSUSE)
+## Install
+
+One command for any Linux distribution (x86_64):
 
 ```bash
-sudo dnf install ./Lyncost-0.2.3-1.x86_64.rpm
+curl -fsSL https://raw.githubusercontent.com/UltraDarshan/lyncost/main/install.sh | sh
 ```
+
+It installs the latest release, verified against its SHA256 checksum, using the best format for
+your system: the `.rpm` on Fedora / RHEL / openSUSE, the `.deb` on Debian / Ubuntu / Mint, or
+otherwise an AppImage in your home folder (no sudo needed). Options:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/UltraDarshan/lyncost/main/install.sh | sh -s -- --appimage        # always use the AppImage
+curl -fsSL https://raw.githubusercontent.com/UltraDarshan/lyncost/main/install.sh | sh -s -- --version 0.2.3   # a specific release
+```
+
+Or download a package from [Releases](https://github.com/UltraDarshan/lyncost/releases/latest) and install it yourself,
+e.g. `sudo dnf install ./Lyncost-0.2.3-1.x86_64.rpm`.
 
 Upgrading from an older Lyncost keeps your data: the database is migrated in place on first launch
 (existing PIN, accounts and history are preserved).
+
+## Uninstall
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/UltraDarshan/lyncost/main/uninstall.sh | sh
+```
+
+Your data and backups are kept. To delete them too (asks you to type DELETE to confirm):
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/UltraDarshan/lyncost/main/uninstall.sh | sh -s -- --purge
+```
 
 ## Where your data is
 

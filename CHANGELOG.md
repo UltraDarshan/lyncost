@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- One-line installer (`install.sh`) and uninstaller (`uninstall.sh`): picks rpm / deb / AppImage,
+  verifies SHA256 checksums, keeps user data on uninstall unless `--purge` is confirmed.
+
 ## 0.2.3 — 2026-10-23
 
 Wintershogun house style.
