@@ -1,6 +1,6 @@
 {
-  "version": "0.2.6",
-  "notes": "Safety backup before any reset, and launch hardening.",
+  "version": "1.0.0",
+  "notes": "Lyncost 1.0: the first public release for Linux.",
   "release_date": "2026-10-24",
-  "release_url": "https://github.com/UltraDarshan/lyncost/releases/tag/v0.2.6"
+  "release_url": "https://github.com/UltraDarshan/lyncost/releases/tag/v1.0.0"
 }
