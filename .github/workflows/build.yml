@@ -27,6 +27,17 @@ jobs:
       - name: Frontend/backend contract check
         run: python3 scripts/check-ipc-contract.py
 
+  audit:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-audit
+      - name: Check dependencies for known vulnerabilities (RustSec)
+        working-directory: src-tauri
+        run: cargo audit
+
   build-linux:
     needs: test
     # Oldest supported runner = oldest glibc = widest compatibility for the packages.
@@ -55,9 +66,56 @@ jobs:
           name: linux-packages
           path: out/
 
+  install-test:
+    # Install the real packages on each target distro and prove the app starts.
+    needs: build-linux
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { image: "fedora:43", kind: rpm }
+          - { image: "fedora:44", kind: rpm }
+          - { image: "ubuntu:22.04", kind: deb }
+          - { image: "ubuntu:24.04", kind: deb }
+          - { image: "debian:12", kind: deb }
+          - { image: "linuxmintd/mint22-amd64", kind: deb }
+    container: ${{ matrix.image }}
+    env:
+      DEBIAN_FRONTEND: noninteractive
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: linux-packages
+          path: pkgs
+      - name: Install package
+        run: |
+          if [ "${{ matrix.kind }}" = rpm ]; then
+            dnf install -y ./pkgs/*.rpm xorg-x11-server-Xvfb xorg-x11-xauth dbus-daemon procps-ng
+          else
+            apt-get update -qq
+            apt-get install -y -qq ./pkgs/*.deb xvfb xauth dbus procps
+          fi
+      - name: All libraries resolve
+        run: |
+          missing="$(ldd /usr/bin/lyncost | grep 'not found' || true)"
+          [ -z "$missing" ] || { echo "$missing"; exit 1; }
+      - name: App starts and creates its database
+        run: |
+          useradd -m tester
+          su tester -c 'export HOME=/home/tester; \
+            timeout 40 dbus-run-session -- xvfb-run -a lyncost >/tmp/lyncost.log 2>&1; code=$?; \
+            echo "exit code: $code"; [ "$code" = 124 ]' || { cat /tmp/lyncost.log; exit 1; }
+          test -f /home/tester/.local/share/com.lyncost.desktop/lyncost.db
+          echo "database created; app ran for 40s without exiting"
+      - name: Desktop entry and AppStream data installed
+        run: |
+          test -f /usr/share/applications/Lyncost.desktop
+          test -f /usr/share/metainfo/com.lyncost.desktop.metainfo.xml
+
   release:
     if: startsWith(github.ref, 'refs/tags/v')
-    needs: build-linux
+    needs: [audit, install-test]
     runs-on: ubuntu-latest
     permissions:
       contents: write

@@ -182,6 +182,8 @@ pub fn update_notification_settings(
 #[tauri::command]
 pub fn wipe_all_data(state: State<'_, AppState>) -> CmdResult<()> {
     let mut conn = state.conn()?;
+    super::backup::write_pre_wipe_backup(&state, &conn)
+        .map_err(|e| format!("Could not save a safety backup, nothing was erased: {e}"))?;
     let tx = conn.transaction().ctx("Failed to wipe database")?;
     // Wiping data must not restart the Windows trial.
     let trial_started_at: Option<String> = tx

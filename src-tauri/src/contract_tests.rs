@@ -438,6 +438,9 @@ fn shopping_backup_restore_export_and_wipe() {
 
     h.ok("set_initial_pin", json!({"pin": "123456"}));
     h.ok("wipe_all_data", json!({}));
+    let safety: Vec<String> = h.ok("get_backups_list", json!({})).as_array().unwrap().iter()
+        .map(|b| b["filename"].as_str().unwrap().to_string()).collect();
+    assert!(safety.iter().any(|n| n.starts_with("lyncost_pre_wipe_")), "wipe keeps a safety copy");
     let s = h.ok("get_app_settings", json!({}));
     assert_eq!(s["has_pin"], false);
     assert_eq!(h.ok("get_accounts", json!({"includeArchived": true})).as_array().unwrap().len(), 0);
