@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.0 — 2026-10-24
+
+First public release for Linux, free for everyone.
+
+- Same app as 0.2.6, now officially launched at https://lyncost.wintershogun.com.
+- Licensed under the Lyncost License 1.0 (source-available; see LICENSE).
+- The app's homepage link now points to lyncost.wintershogun.com.
+
 ## 0.2.6 — 2026-10-24
 
 Launch hardening.
