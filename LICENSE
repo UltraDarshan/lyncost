@@ -1,0 +1,124 @@
+LYNCOST LICENSE
+Version 1.0, effective 24 October 2026
+
+Copyright (c) 2026 Wintershogun TechLabs. All rights reserved.
+https://lyncost.wintershogun.com/license
+
+Lyncost is source-available software, not open-source software. Its source
+code is public so anyone can see how it works and check that it keeps their
+data private. Publishing the code does not give anyone the right to copy,
+change, or redistribute it. Wintershogun TechLabs owns every part of Lyncost
+and reserves all rights not given in this license.
+
+1. WHO OWNS LYNCOST
+
+Lyncost, including its source code, compiled programs, installers, design,
+documentation, name, and logo (together, the "Software"), is owned by
+Wintershogun TechLabs, Davanagere, Karnataka, India ("we", "us"). All rights
+are reserved. You receive only the rights written in this license.
+
+2. LINUX EDITION: FREE FOR EVERYONE
+
+You may download the official Linux builds of Lyncost and install and use them
+free of charge, for personal, household, or business use, on as many computers
+as you like.
+
+Official builds are the ones published at lyncost.wintershogun.com and on the
+Releases page of the official repository (github.com/UltraDarshan/lyncost),
+including through the official install script. Free use does not include any
+right to copy the code, change it, or redistribute the Software.
+
+3. WINDOWS EDITION: PAID
+
+The Windows edition needs a paid license key. A key is a one-time purchase
+(₹799 in India, US$10 elsewhere, or the price shown at the time of purchase)
+and does not expire. How many computers one key covers is stated at the time
+of purchase.
+
+You may not share, sell, or publish license keys, or bypass, disable, or
+change the license check in any way.
+
+4. WHAT YOU MAY DO WITH THE SOURCE CODE
+
+You may read the source code to understand how Lyncost works, review it for
+security or privacy, and report problems to us.
+
+5. WHAT YOU MAY NOT DO
+
+Unless we give you written permission first, you may not:
+
+- copy, modify, adapt, translate, or create derivative works from the Software
+  or any part of its source code;
+- build, compile, or run your own versions of the Software, or distribute
+  builds that did not come from us;
+- redistribute, publish, sell, rent, lease, sublicense, or mirror the Software
+  or its source code, including repackaging it for other stores, package
+  repositories, or download sites;
+- use the source code, its design, or its name to make a competing or similar
+  product;
+- use the source code to train or improve machine-learning or AI models;
+- remove or change any copyright, license, or trademark notice.
+
+6. CONTRIBUTIONS
+
+We do not accept pull requests or code contributions unless we have invited
+them in writing. You are welcome to report bugs and suggest ideas. If you send
+us feedback, we may use it freely and without any obligation to you.
+
+7. COPIES ON GITHUB
+
+Because the code is hosted on GitHub, GitHub's Terms of Service let GitHub
+users view the repository and fork it on GitHub. A fork is only a copy inside
+GitHub. It gives you none of the rights this license withholds: you still may
+not modify, build, run, or redistribute the code from a fork.
+
+8. YOUR DATA
+
+Lyncost keeps your financial records in a database on your own computer. We do
+not collect, receive, or store them. You are responsible for your own backups.
+Lyncost is a record-keeping tool and does not give financial, tax, or
+investment advice.
+
+9. TRADEMARKS
+
+"Lyncost", "Winter Shogun", "Wintershogun TechLabs", and their logos are our
+trademarks. This license gives you no right to use them, except to refer to
+the Software truthfully.
+
+10. NO WARRANTY
+
+The Software is provided "as is", without warranties of any kind, express or
+implied, including merchantability, fitness for a particular purpose, and
+non-infringement, to the fullest extent the law allows.
+
+11. LIMITATION OF LIABILITY
+
+To the fullest extent the law allows, we are not liable for any indirect,
+incidental, special, or consequential loss, or for loss of data, profits, or
+business, arising from the Software. Our total liability for any claim is
+limited to the amount you paid us for the Software in the twelve months before
+the claim (which is zero for the free Linux edition). Nothing in this license
+limits rights you have under consumer-protection law that cannot be waived.
+
+12. ENDING THIS LICENSE
+
+This license ends automatically if you break any of its terms. When it ends,
+you must stop using the Software and delete every copy you have. The sections
+on ownership, restrictions, trademarks, warranty, liability, and governing law
+continue to apply.
+
+13. CHANGES TO THIS LICENSE
+
+We may publish new versions of this license. The license included with a
+release applies to that release. New releases may come with an updated
+license.
+
+14. GOVERNING LAW
+
+This license is governed by the laws of India. The courts at Davanagere,
+Karnataka, India have exclusive jurisdiction over any dispute about it.
+
+15. CONTACT
+
+Questions about this license or requests for permission:
+contact@wintershogun.com.

@@ -23,7 +23,8 @@
     </ul>
   </description>
   <launchable type="desktop-id">Lyncost.desktop</launchable>
-  <url type="homepage">https://github.com/UltraDarshan/lyncost</url>
+  <url type="homepage">https://lyncost.wintershogun.com</url>
+  <url type="vcs-browser">https://github.com/UltraDarshan/lyncost</url>
   <url type="bugtracker">https://github.com/UltraDarshan/lyncost/issues</url>
   <categories>
     <category>Office</category>
