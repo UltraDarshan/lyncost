@@ -218,6 +218,87 @@ main [class*="rounded-2xl"]:has(> .grid.sm\:grid-cols-4) {
   }
 }
 
+/* ---------- Text wrapping -------------------------------------------------- */
+/* Short labels must never break across lines ("Grade B / Stable / Growth").
+   Sentences still wrap normally; only label-like elements are pinned. */
+
+/* Pills, badges and chips */
+main [class*="rounded-full"],
+main span[class*="rounded"],
+main [class*="py-0.5"], main [class*="py-0.2"],
+/* Label-like captions: uppercase tags ("CREDIT CARD • INR"), the contents of
+   small bordered badges ("Grade B / Stable Growth"), sub-labels in table cells,
+   and the date/amount pairs in compact caption rows. Sentences are untouched. */
+main span[class*="uppercase"],
+main [class*="rounded"][class*="border"][class*="px-3"][class*="py-1"] span,
+td span[class*="text-[10px]"], td span[class*="text-[11px]"], td .flex > span, td > span, td:first-child,
+main .justify-between[class*="text-[11px]"] > span,
+/* Meta lines like "Monthly • 2026-10-01 to 2026-10-31 • 7d left" break between parts */
+main p.flex > span,
+/* Captions under figures in three-across rows, and right-aligned footer buttons */
+main [class*="grid-cols-3"] span[class*="text-[10px]"],
+main .justify-end > button,
+/* Compact buttons whose content is just an icon and a label (not the
+   wide toggle rows that also carry a description) */
+button[class*="px-"]:not([class*="w-full"]):not([class*="text-left"]):not(:has(p, div, h3, h4)),
+/* In tables: names, amounts and dates stay on one line; notes may wrap */
+td [class*="font-semibold"], td [class*="font-bold"], td [class*="font-medium"],
+td.text-right, td [class*="font-mono"], td[class*="font-mono"],
+/* Table headers and page titles */
+th, main h1, main h2 {
+  white-space: nowrap;
+}
+
+/* Header rows (page titles, card headers, KPI labels): when space runs out,
+   the buttons / icons / badge move to the next line instead of squeezing the
+   title into two lines. */
+main .flex.justify-between:not(.flex-col),
+main .flex.flex-col.justify-between[class*="sm:flex-row"] {
+  flex-wrap: wrap;
+  row-gap: 0.5rem;
+}
+/* The title block may shrink (its description wraps like a sentence) so a
+   badge or button can stay on the right; titles themselves never break, so
+   when there is truly no room the badge moves down instead. */
+main .flex.justify-between:not(.flex-col) > div:first-child {
+  flex: 1 1 8rem;
+}
+main .flex.justify-between h3 {
+  white-space: nowrap;
+}
+
+/* Narrow windows: four-across KPI rows become 2 x 2 so labels and amounts
+   keep their full width; big figures in three-across rows scale down a step. */
+main {
+  container-type: inline-size;
+}
+@container (max-width: 980px) {
+  main .grid[class*="grid-cols-4"]:not(.sm\:grid-cols-4) {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+/* Smallest window: three-across summary rows stack. */
+@container (max-width: 700px) {
+  main .grid[class*="grid-cols-3"] {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+}
+main p.flex {
+  flex-wrap: wrap;
+  row-gap: 0.125rem;
+}
+main [class*="grid-cols-3"] [class*="text-2xl"] {
+  font-size: clamp(1.1rem, 1.6vw, 1.5rem) !important;
+}
+main [class*="grid-cols-3"] [class*="text-xl"] {
+  font-size: clamp(0.95rem, 1.3vw, 1.25rem) !important;
+}
+
+/* Tables that do not fit scroll sideways inside their card. */
+main div:has(> table) {
+  overflow-x: auto !important;
+}
+
 /* ---------- Sidebar ------------------------------------------------------- */
 
 html.theme-dark aside,

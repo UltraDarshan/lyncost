@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.2.5 — 2026-10-24
+
+Layout polish.
+
+- Short labels never break across lines any more: badges and pills ("Grade B · Stable Growth",
+  "Surplus Runway"), buttons, table headers, account and holding names, dates and amounts.
+- Header rows move their badge or buttons to the next line when space runs out, instead of
+  squeezing the title; tables that do not fit scroll sideways inside their card.
+- Narrow windows: four-across summary cards become 2 x 2 and figures scale to fit.
+- New automated layout check (every page, both themes, three window sizes) and a full UI feature
+  test in `scripts/qa/`.
+
 ## 0.2.4 — 2026-10-24
 
 - New accent color: Iris (blue-violet), replacing the muted steel blue. Chosen to stay clear of the
