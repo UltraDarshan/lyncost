@@ -29,11 +29,11 @@ otherwise an AppImage in your home folder (no sudo needed). Options:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/UltraDarshan/lyncost/main/install.sh | sh -s -- --appimage        # always use the AppImage
-curl -fsSL https://raw.githubusercontent.com/UltraDarshan/lyncost/main/install.sh | sh -s -- --version 0.2.5   # a specific release
+curl -fsSL https://raw.githubusercontent.com/UltraDarshan/lyncost/main/install.sh | sh -s -- --version 0.2.6   # a specific release
 ```
 
 Or download a package from [Releases](https://github.com/UltraDarshan/lyncost/releases/latest) and install it yourself,
-e.g. `sudo dnf install ./Lyncost-0.2.5-1.x86_64.rpm`.
+e.g. `sudo dnf install ./Lyncost-0.2.6-1.x86_64.rpm`.
 
 Upgrading from an older Lyncost keeps your data: the database is migrated in place on first launch
 (existing PIN, accounts and history are preserved).

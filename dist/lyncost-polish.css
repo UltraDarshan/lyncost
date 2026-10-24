@@ -560,6 +560,18 @@ html.theme-light input:focus, html.theme-light textarea:focus, html.theme-light 
   border-color: var(--lc-accent) !important;
   box-shadow: 0 0 0 3px var(--lc-accent-soft) !important;
 }
+/* Inline-edit fields (e.g. account names in Quick Setup) are designed borderless. */
+html.theme-dark input[class*="border-none"]:not(#lc),
+html.theme-light input[class*="border-none"]:not(#lc) {
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+html.theme-dark input[class*="border-none"]:not(#lc):focus,
+html.theme-light input[class*="border-none"]:not(#lc):focus {
+  box-shadow: 0 1.5px 0 var(--lc-accent) !important;
+}
 input, textarea, select {
   transition: border-color var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
 }

@@ -37,6 +37,11 @@
   </keywords>
   <content_rating type="oars-1.1"/>
   <releases>
+    <release version="0.2.6" date="2026-10-24">
+      <description>
+        <p>Safety backup before any reset, and launch hardening.</p>
+      </description>
+    </release>
     <release version="0.2.5" date="2026-10-24">
       <description>
         <p>Cleaner layout: labels and badges no longer break across lines; better fit on smaller windows.</p>

@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.2.6 — 2026-10-24
+
+Launch hardening.
+
+- "Forgot PIN" and "Reset App Data" now save a safety backup first, so a wipe done by mistake
+  can be restored from Settings → Backups.
+- Quick Setup: account-name fields are clean inline fields again.
+- Verified upgrades from databases created by the original Lyncost (0.1.x) keep PIN, balances,
+  loans and bills untouched.
+- Every release is now dependency-audited (RustSec) and install-tested on Fedora 43/44,
+  Ubuntu 22.04/24.04, Debian 12 and Linux Mint 22 before it can be published.
+
 ## 0.2.5 — 2026-10-24
 
 Layout polish.
