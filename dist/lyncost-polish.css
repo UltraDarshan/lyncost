@@ -4,7 +4,7 @@
  * The original frontend source was lost, so the visual refinement lives here,
  * loaded after the compiled bundle CSS. It follows the Wintershogun TechLabs
  * house style (wintershogun.com): Plus Jakarta Sans for text, Shippori Mincho
- * for headings, and the "snow / frost" palette of slate nights and frost blue.
+ * for headings, and its slate palette, with Iris (blue-violet) as the accent.
  * Selectors are prefixed with `html.theme-*` to outrank the bundle's
  * `.theme-*` overrides, which also use !important.
  */
@@ -66,19 +66,20 @@
   --dur: 240ms;
   --dur-slow: 420ms;
 
-  /* Re-tint the bundle's violet scale to wintershogun frost blue, so every
-     purple utility (chips, borders, focus, active states) follows the brand. */
-  --color-purple-50: #eff6fc;
-  --color-purple-100: #dcebf8;
-  --color-purple-200: #bfe3ff;
-  --color-purple-300: #92c9ef;
-  --color-purple-400: #5ea8db;
-  --color-purple-500: #2f7fbc;
-  --color-purple-600: #1d5f94;
-  --color-purple-700: #194f7b;
-  --color-purple-800: #174064;
-  --color-purple-900: #14334f;
-  --color-purple-950: #0b1d30;
+  /* Re-tint the bundle's violet scale to Iris, the Lyncost accent, so every
+     purple utility (chips, borders, focus, active states) follows it. Iris stays
+     clear of the money colors: green income, red expense, amber warnings. */
+  --color-purple-50: #f0f0fe;
+  --color-purple-100: #e1e2fd;
+  --color-purple-200: #c9cafb;
+  --color-purple-300: #a9abf9;
+  --color-purple-400: #8b8df8;
+  --color-purple-500: #6e6ff0;
+  --color-purple-600: #5b5bd6;
+  --color-purple-700: #4a49b8;
+  --color-purple-800: #3c3b93;
+  --color-purple-900: #312f75;
+  --color-purple-950: #1e1d4a;
 
   /* Neutral greys follow the website's slate (the bundle used violet-tinted zinc). */
   --color-zinc-50: #f8fafc;
@@ -147,7 +148,7 @@ h3 {
 .text-3xl, .sm\:text-3xl { font-size: clamp(1.35rem, 1.85vw, 1.875rem) !important; white-space: nowrap; }
 [class*="text-xl"], [class*="text-2xl"] { letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
 
-/* ---------- Palette (wintershogun.com "snow / frost") --------------------- */
+/* ---------- Palette (wintershogun.com slate + Iris accent) ---------------- */
 
 html.theme-dark {
   --lc-canvas: #020617;
@@ -158,11 +159,11 @@ html.theme-dark {
   --lc-line-strong: rgb(255 255 255 / 0.15);
   --lc-text: #eef3f8;
   --lc-muted: #a3b1c4;
-  --lc-accent: #2a73b0;
-  --lc-accent-hover: #3586c7;
-  --lc-accent-soft: rgb(191 227 255 / 0.1);
-  --lc-accent-text: #bfe3ff;
-  --lc-accent-rgb: 42 115 176;
+  --lc-accent: #5b5bd6;
+  --lc-accent-hover: #6e6ff0;
+  --lc-accent-soft: rgb(139 141 248 / 0.14);
+  --lc-accent-text: #a9abf9;
+  --lc-accent-rgb: 91 91 214;
   --lc-gold: #d6b57a;
   --lc-shadow: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 12px 32px -18px rgb(0 0 0 / 0.8);
   --lc-shadow-hover: 0 1px 0 rgb(255 255 255 / 0.06) inset, 0 18px 40px -20px rgb(0 0 0 / 0.9);
@@ -178,11 +179,11 @@ html.theme-light {
   --lc-line-strong: rgb(15 23 42 / 0.16);
   --lc-text: #0f172a;
   --lc-muted: #475569;
-  --lc-accent: #1d5f94;
-  --lc-accent-hover: #174f7c;
-  --lc-accent-soft: rgb(29 95 148 / 0.09);
-  --lc-accent-text: #1d5f94;
-  --lc-accent-rgb: 29 95 148;
+  --lc-accent: #5b5bd6;
+  --lc-accent-hover: #4a49b8;
+  --lc-accent-soft: rgb(91 91 214 / 0.09);
+  --lc-accent-text: #4a49b8;
+  --lc-accent-rgb: 91 91 214;
   --lc-gold: #8a6420;
   --lc-shadow: 0 1px 2px rgb(15 23 42 / 0.04), 0 10px 28px -16px rgb(15 23 42 / 0.14);
   --lc-shadow-hover: 0 1px 2px rgb(15 23 42 / 0.05), 0 16px 36px -18px rgb(15 23 42 / 0.2);
