@@ -1,6 +1,6 @@
 {
-  "version": "0.2.5",
-  "notes": "Cleaner layout: labels and badges no longer break across lines; better fit on smaller windows.",
+  "version": "0.2.6",
+  "notes": "Safety backup before any reset, and launch hardening.",
   "release_date": "2026-10-24",
-  "release_url": "https://github.com/UltraDarshan/lyncost/releases/tag/v0.2.5"
+  "release_url": "https://github.com/UltraDarshan/lyncost/releases/tag/v0.2.6"
 }
