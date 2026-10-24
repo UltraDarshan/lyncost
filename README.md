@@ -113,3 +113,4 @@ and check that it keeps your data private, but all rights belong to Wintershogun
 - You may not copy, modify, build, or redistribute the code. Pull requests are not accepted unless invited.
 
 See [LICENSE](LICENSE) or https://lyncost.wintershogun.com/license for the full terms.
+Also see [PRIVACY.md](PRIVACY.md), [SECURITY.md](SECURITY.md), and [CONTRIBUTING.md](CONTRIBUTING.md).
