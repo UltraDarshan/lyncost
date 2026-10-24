@@ -37,6 +37,16 @@
     <keyword>investment</keyword>
   </keywords>
   <content_rating type="oars-1.1"/>
+  <screenshots>
+    <screenshot type="default">
+      <caption>Dashboard: monthly totals, account balances, financial health, and a 30-day projection</caption>
+      <image>https://lyncost.wintershogun.com/images/lyncost/screenshot-dashboard.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Investments: portfolio value, profit and loss, and allocation</caption>
+      <image>https://lyncost.wintershogun.com/images/lyncost/screenshot-investments.png</image>
+    </screenshot>
+  </screenshots>
   <releases>
     <release version="1.0.0" date="2026-10-24"/>
     <release version="0.2.6" date="2026-10-24">

@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Lyncost website
+    url: https://lyncost.wintershogun.com
+    about: Install instructions, features, and the license.
+  - name: Report a security problem privately
+    url: https://github.com/UltraDarshan/lyncost/blob/main/SECURITY.md
+    about: Please do not open public issues for security problems.
