@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
-      - uses: taiki-e/install-action@v2
+      - uses: taiki-e/install-action@1e29709c0ec63babbe8f266397a465f29a825f91 # v2
         with:
           tool: cargo-audit
       - name: Check dependencies for known vulnerabilities (RustSec)
@@ -283,7 +283,7 @@ jobs:
             echo "::warning::No updater signature: this release has no latest.json, so Windows apps will not see it as an update."
           fi
           (cd out && rm -f SHA256SUMS && sha256sum $(ls | grep -v latest.json) > SHA256SUMS && cat SHA256SUMS)
-      - uses: softprops/action-gh-release@v2
+      - uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
         with:
           files: out/*
           draft: true
