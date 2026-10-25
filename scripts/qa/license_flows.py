@@ -120,7 +120,10 @@ if win:
     settings = s.text()
     check("Settings shows who it is licensed to", "Licensed to QA Tester" in settings)
     check("no Linux wording in the Windows app", "Linux" not in settings and "Fedora" not in settings)
-    check("Settings shows the real version", "Lyncost v" + s.js("return window.__LYNCOST_VERSION__") in settings)
+    version = s.js("return window.__LYNCOST_VERSION__")
+    check("Settings shows the real version", "Lyncost v" + version in settings)
+    check("no old version numbers anywhere", "v1.0.0" not in settings or version == "1.0.0")
+    check("Windows edition is not called free", "Free & Private" not in settings)
     s.shot("license-4-settings")
 
 errors = s.errors()
