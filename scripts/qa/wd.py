@@ -43,6 +43,7 @@ class Session:
         if session_id is None:
             caps = {"capabilities": {"alwaysMatch": {"tauri:options": {"application": str(APP)}}}}
             session_id = req("POST", "/session", caps)["sessionId"]
+            SESSION_FILE.parent.mkdir(parents=True, exist_ok=True)
             SESSION_FILE.write_text(session_id)
         self.id = session_id
 
