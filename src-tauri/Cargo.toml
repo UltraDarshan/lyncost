@@ -33,7 +33,8 @@ data-encoding = "2"
 
 [target.'cfg(windows)'.dependencies]
 winreg = "0.55"
-tauri-plugin-updater = "2"
+# No "zip": Windows updates are the signed setup.exe itself, never an archive.
+tauri-plugin-updater = { version = "2", default-features = false, features = ["rustls-tls", "system-proxy"] }
 
 [features]
 # QA builds: accept keys signed by the test key in scripts/license, and let tests move the clock.

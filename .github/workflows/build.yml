@@ -229,22 +229,20 @@ jobs:
           try { Invoke-WebRequest "https://msedgedriver.microsoft.com/$ver/edgedriver_win64.zip" -OutFile edgedriver.zip }
           catch { Invoke-WebRequest "https://msedgedriver.azureedge.net/$ver/edgedriver_win64.zip" -OutFile edgedriver.zip }
           Expand-Archive edgedriver.zip -DestinationPath edgedriver
-      - name: Start tauri-driver
+      - name: Trial and license, every feature, layout
+        # One step: Windows ends background processes when a step finishes, so the driver
+        # has to start in the same step as the tests.
         shell: pwsh
-        run: |
-          Start-Process tauri-driver -ArgumentList "--native-driver", "$pwd\edgedriver\msedgedriver.exe" -RedirectStandardOutput driver.log -RedirectStandardError driver.err
-          Start-Sleep -Seconds 3
-      - name: Trial and license
-        working-directory: scripts/qa
-        run: python license_flows.py
-      - name: Every feature
         working-directory: scripts/qa
         run: |
-          python seed.py
-          python flows.py
-      - name: Layout (no clipped or wrapped labels)
-        working-directory: scripts/qa
-        run: python layout_check.py 135790
+          $driver = Start-Process tauri-driver -ArgumentList "--native-driver", "$env:GITHUB_WORKSPACE\edgedriver\msedgedriver.exe" -PassThru -RedirectStandardOutput "$env:RUNNER_TEMP\driver.log" -RedirectStandardError "$env:RUNNER_TEMP\driver.err"
+          for ($i = 0; $i -lt 30 -and -not (Test-NetConnection 127.0.0.1 -Port 4444 -InformationLevel Quiet -WarningAction SilentlyContinue); $i++) { Start-Sleep 1 }
+          function Run($script) { python $script; if ($LASTEXITCODE -ne 0) { Get-Content "$env:RUNNER_TEMP\driver.err" -ErrorAction SilentlyContinue | Select-Object -Last 30; throw "$script failed" } }
+          Run license_flows.py
+          Run seed.py
+          Run flows.py
+          python layout_check.py 135790; if ($LASTEXITCODE -ne 0) { throw "layout_check failed" }
+          Stop-Process -Id $driver.Id -Force -ErrorAction SilentlyContinue
       - uses: actions/upload-artifact@v4
         if: always()
         with:
