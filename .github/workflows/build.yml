@@ -236,6 +236,14 @@ jobs:
           Expand-Archive edgedriver.zip -DestinationPath edgedriver
           # Wrapper that turns on the driver's detailed log (shown if a test fails).
           Set-Content edgedriver\msedgedriver-log.cmd "@`"%~dp0msedgedriver.exe`" --verbose --log-path=`"%RUNNER_TEMP%\msedgedriver.log`" %*"
+      - name: Let the test driver attach to WebView2 (throwaway runner only)
+        # WebView2 150+ ignores the debugging switch msedgedriver passes in; the machine-wide
+        # policy still works. Never set on users' PCs: this exists only on the CI machine.
+        shell: pwsh
+        run: |
+          $key = "HKLM:\SOFTWARE\Policies\Microsoft\Edge\WebView2\AdditionalBrowserArguments"
+          New-Item -Path $key -Force | Out-Null
+          New-ItemProperty -Path $key -Name "lyncost.exe" -Value "--remote-debugging-port=0" -PropertyType String -Force | Out-Null
       - name: QA app starts on its own
         shell: pwsh
         run: |
