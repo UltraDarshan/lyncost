@@ -224,11 +224,25 @@ jobs:
         shell: pwsh
         run: |
           cargo install tauri-driver --locked
-          $ver = (Get-Item "${env:ProgramFiles(x86)}\Microsoft\Edge\Application\msedge.exe").VersionInfo.ProductVersion
-          "Edge $ver"
+          # The driver must match the WebView2 runtime the app uses (not the Edge browser).
+          $key = "HKLM:\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}"
+          $ver = (Get-ItemProperty $key -ErrorAction SilentlyContinue).pv
+          if (-not $ver) { $ver = (Get-Item "${env:ProgramFiles(x86)}\Microsoft\Edge\Application\msedge.exe").VersionInfo.ProductVersion }
+          "WebView2 $ver"
           try { Invoke-WebRequest "https://msedgedriver.microsoft.com/$ver/edgedriver_win64.zip" -OutFile edgedriver.zip }
           catch { Invoke-WebRequest "https://msedgedriver.azureedge.net/$ver/edgedriver_win64.zip" -OutFile edgedriver.zip }
           Expand-Archive edgedriver.zip -DestinationPath edgedriver
+      - name: QA app starts on its own
+        shell: pwsh
+        run: |
+          $p = Start-Process $env:LYNCOST_QA_APP -PassThru -RedirectStandardError "$env:RUNNER_TEMP\app.err"
+          Start-Sleep -Seconds 15
+          if ($p.HasExited) { Get-Content "$env:RUNNER_TEMP\app.err"; throw "QA app exited with code $($p.ExitCode)" }
+          Stop-Process -Id $p.Id -Force
+          Start-Sleep -Seconds 2
+          # That first start began a trial; clear it so the license test starts fresh.
+          Remove-Item "HKCU:\Software\Wintershogun" -Recurse -ErrorAction SilentlyContinue
+          Remove-Item "$env:APPDATA\Wintershogun", "$env:APPDATA\com.lyncost.desktop" -Recurse -ErrorAction SilentlyContinue
       - name: Trial and license, every feature, layout
         # One step: Windows ends background processes when a step finishes, so the driver
         # has to start in the same step as the tests.
