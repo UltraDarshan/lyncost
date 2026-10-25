@@ -218,8 +218,10 @@ jobs:
       - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2
         with:
           workspaces: src-tauri
+      - run: npm ci
       - name: Build the QA app (test license key, movable clock)
-        run: cargo build --manifest-path src-tauri/Cargo.toml --features qa
+        # Same build mode as Tauri's WebDriver guide: a real (embedded-assets) debug build.
+        run: npx tauri build --debug --no-bundle --features qa
       - name: Install tauri-driver and the matching Edge WebDriver
         shell: pwsh
         run: |
@@ -232,6 +234,8 @@ jobs:
           try { Invoke-WebRequest "https://msedgedriver.microsoft.com/$ver/edgedriver_win64.zip" -OutFile edgedriver.zip }
           catch { Invoke-WebRequest "https://msedgedriver.azureedge.net/$ver/edgedriver_win64.zip" -OutFile edgedriver.zip }
           Expand-Archive edgedriver.zip -DestinationPath edgedriver
+          # Wrapper that turns on the driver's detailed log (shown if a test fails).
+          Set-Content edgedriver\msedgedriver-log.cmd "@`"%~dp0msedgedriver.exe`" --verbose --log-path=`"%RUNNER_TEMP%\msedgedriver.log`" %*"
       - name: QA app starts on its own
         shell: pwsh
         run: |
@@ -249,9 +253,9 @@ jobs:
         shell: pwsh
         working-directory: scripts/qa
         run: |
-          $driver = Start-Process tauri-driver -ArgumentList "--native-driver", "$env:GITHUB_WORKSPACE\edgedriver\msedgedriver.exe" -PassThru -RedirectStandardOutput "$env:RUNNER_TEMP\driver.log" -RedirectStandardError "$env:RUNNER_TEMP\driver.err"
+          $driver = Start-Process tauri-driver -ArgumentList "--native-driver", "$env:GITHUB_WORKSPACE\edgedriver\msedgedriver-log.cmd" -PassThru -RedirectStandardOutput "$env:RUNNER_TEMP\driver.log" -RedirectStandardError "$env:RUNNER_TEMP\driver.err"
           for ($i = 0; $i -lt 30 -and -not (Test-NetConnection 127.0.0.1 -Port 4444 -InformationLevel Quiet -WarningAction SilentlyContinue); $i++) { Start-Sleep 1 }
-          function Run($script) { python $script; if ($LASTEXITCODE -ne 0) { Get-Content "$env:RUNNER_TEMP\driver.err" -ErrorAction SilentlyContinue | Select-Object -Last 30; throw "$script failed" } }
+          function Run($script) { python $script; if ($LASTEXITCODE -ne 0) { Get-Content "$env:RUNNER_TEMP\driver.err", "$env:RUNNER_TEMP\msedgedriver.log" -ErrorAction SilentlyContinue | Select-Object -Last 80; throw "$script failed" } }
           Run license_flows.py
           Run seed.py
           Run flows.py
