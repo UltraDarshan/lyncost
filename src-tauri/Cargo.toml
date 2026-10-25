@@ -1,6 +1,6 @@
 [package]
 name = "lyncost"
-version = "1.0.0"
+version = "1.1.0"
 description = "Lyncost - 100% Offline, Privacy-First Personal Finance & Investment Tracker"
 authors = ["Wintershogun TechLabs"]
 license = "LicenseRef-Proprietary"
@@ -26,6 +26,20 @@ rusqlite = { version = "0.33", features = ["bundled"] }
 chrono = { version = "0.4", features = ["serde"] }
 bcrypt = "0.17"
 dirs = "6"
+ed25519-dalek = "2"
+hmac = "0.12"
+sha2 = "0.10"
+data-encoding = "2"
+
+[target.'cfg(windows)'.dependencies]
+winreg = "0.55"
+tauri-plugin-updater = "2"
+
+[features]
+# QA builds: accept keys signed by the test key in scripts/license, and let tests move the clock.
+qa = []
+# Enforce the Windows license on other platforms (for local testing on Linux).
+license-gate = []
 
 [dev-dependencies]
 tauri = { version = "2", features = ["test"] }

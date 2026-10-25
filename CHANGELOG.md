@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.1.0 — unreleased
+
+Lyncost for Windows, and a few fixes for everyone.
+
+- **Windows edition:** setup wizard installer, a 14-day free trial (welcome message on first launch), then a lifetime license key (`LYNC3-...`) to keep adding and editing records. Keys are checked offline with a digital signature; the trial cannot be restarted by deleting data, reinstalling, or turning the clock back. When locked, your data stays viewable and exportable.
+- **Windows updates:** the app finds new versions, installs them in place, and reopens; data and license are kept.
+- The Windows edition shows no Linux-only wording; Settings shows the real app version.
+- Links in the app point to wintershogun.com (purchase, key recovery, help email).
+
 ## 1.0.0 — 2026-10-24
 
 First public release for Linux, free for everyone.

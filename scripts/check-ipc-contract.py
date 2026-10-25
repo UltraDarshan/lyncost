@@ -15,10 +15,11 @@ IGNORED_PARAMS = {"state", "app"}
 
 def frontend_calls():
     calls = {}
-    for path in glob.glob(f"{ROOT}/dist/assets/*.js"):
+    for path in glob.glob(f"{ROOT}/dist/assets/*.js") + glob.glob(f"{ROOT}/dist/*.js"):
         src = open(path, encoding="utf-8").read()
-        # The bundle aliases invoke as a short identifier: ae("cmd") / ae("cmd",{k:v})
-        for m in re.finditer(r'\b[A-Za-z_$]{1,3}\("([a-z]+(?:_[a-z]+)+)"(?:,\{([^{}]*)\})?\)', src):
+        # The bundle aliases invoke as a short identifier: ae("cmd") / ae("cmd",{k:v});
+        # our own scripts in dist/ call tauri.invoke("cmd", {...}).
+        for m in re.finditer(r'(?:\b[A-Za-z_$]{1,3}|\.invoke)\("([a-z]+(?:_[a-z]+)+)"(?:,\s*\{([^{}]*)\})?\)', src):
             cmd, body = m.group(1), m.group(2)
             keys = set(re.findall(r'(?:^|,)\s*([A-Za-z_$][\w$]*)\s*:', body)) if body else set()
             calls.setdefault(cmd, set()).update(keys)

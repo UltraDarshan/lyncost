@@ -12,7 +12,7 @@ import sys
 import time
 
 from capture import PAGES
-from wd import Session, req
+from wd import Session, req, QA
 
 CHECK_JS = r"""
 const out = [];
@@ -88,7 +88,7 @@ def main():
     for (kind, page, txt), where in sorted(found.items()):
         print(f"{kind:8s} {page:16s} {txt!r:44s} {', '.join(sorted(where))}")
     print(f"\n{len(found)} issue(s); JS errors: {s.errors()}")
-    json.dump([[k, p, t, sorted(w)] for (k, p, t), w in found.items()], open("/tmp/lyncost-layout.json", "w"))
+    json.dump([[k, p, t, sorted(w)] for (k, p, t), w in found.items()], open(QA / "layout.json", "w"))
 
 
 if __name__ == "__main__":

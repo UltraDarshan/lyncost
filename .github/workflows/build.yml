@@ -24,6 +24,8 @@ jobs:
           workspaces: src-tauri
       - name: Rust tests (unit + IPC contract)
         run: cargo test --manifest-path src-tauri/Cargo.toml
+      - name: Windows license tests (QA key, gate on)
+        run: cargo test --manifest-path src-tauri/Cargo.toml --features qa,license-gate license
       - name: Frontend/backend contract check
         run: python3 scripts/check-ipc-contract.py
 
@@ -113,17 +115,174 @@ jobs:
           test -f /usr/share/applications/Lyncost.desktop
           test -f /usr/share/metainfo/com.lyncost.desktop.metainfo.xml
 
+  build-windows:
+    # The paid Windows edition: NSIS setup wizard + signed update files for the in-app updater.
+    needs: test
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+      - run: npm ci
+      - name: Build the installer
+        shell: bash
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        run: |
+          if [ -n "$TAURI_SIGNING_PRIVATE_KEY" ]; then
+            npx tauri build
+          else
+            echo "::warning::TAURI_SIGNING_PRIVATE_KEY is not set: building without update files (in-app updates need them)."
+            npx tauri build --config '{"bundle":{"createUpdaterArtifacts":false}}'
+          fi
+      - name: Release build trusts only the real license key
+        shell: bash
+        run: |
+          exe=src-tauri/target/release/lyncost.exe
+          if grep -aq 50c0a27d8cdd2fb70e4bea9f57938c3060e4e96351bd62d9ce904e12e4d56ad0 "$exe"; then
+            echo "::error::The release build contains the QA test key"; exit 1
+          fi
+          grep -aq 34f9642006dd0abb2d23ccf308c6af3e82669b49f684decf65774cda74c67d0d "$exe"
+      - name: Collect installer
+        shell: bash
+        run: |
+          mkdir -p out
+          cp src-tauri/target/release/bundle/nsis/*-setup.exe out/
+          cp src-tauri/target/release/bundle/nsis/*-setup.exe.sig out/ 2>/dev/null || true
+          ls -l out
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-installer
+          path: out/
+
+  smoke-windows:
+    # Install the real setup.exe silently, start the app, check the trial started, uninstall.
+    needs: build-windows
+    runs-on: windows-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: windows-installer
+          path: win
+      - name: Install silently
+        shell: pwsh
+        run: |
+          $setup = Get-ChildItem win\*-setup.exe | Select-Object -First 1
+          Start-Process $setup.FullName -ArgumentList '/S' -Wait
+          $exe = "$env:LOCALAPPDATA\Lyncost\lyncost.exe"
+          if (-not (Test-Path $exe)) { Get-ChildItem "$env:LOCALAPPDATA" | Out-Host; throw "lyncost.exe not installed" }
+          $lnk = Get-ChildItem "$env:APPDATA\Microsoft\Windows\Start Menu\Programs" -Recurse -Filter "Lyncost*.lnk"
+          if (-not $lnk) { throw "No Start menu shortcut" }
+          "Installed: $exe"
+      - name: App starts, creates its database and starts the trial
+        shell: pwsh
+        run: |
+          $p = Start-Process "$env:LOCALAPPDATA\Lyncost\lyncost.exe" -PassThru
+          Start-Sleep -Seconds 30
+          if ($p.HasExited) { throw "Lyncost exited with code $($p.ExitCode)" }
+          if (-not (Test-Path "$env:APPDATA\com.lyncost.desktop\lyncost.db")) { throw "No database" }
+          $ts = (Get-ItemProperty "HKCU:\Software\Wintershogun\Lyncost" -ErrorAction Stop).ts
+          if (-not $ts) { throw "Trial was not recorded" }
+          "Trial recorded: $ts"
+          Stop-Process -Id $p.Id -Force
+      - name: Uninstall keeps the user's data
+        shell: pwsh
+        run: |
+          Start-Process "$env:LOCALAPPDATA\Lyncost\uninstall.exe" -ArgumentList '/S' -Wait
+          Start-Sleep -Seconds 5
+          if (Test-Path "$env:LOCALAPPDATA\Lyncost\lyncost.exe") { throw "App still installed" }
+          if (-not (Test-Path "$env:APPDATA\com.lyncost.desktop\lyncost.db")) { throw "Uninstall deleted the user's data" }
+          "Uninstalled; data kept"
+
+  qa-windows:
+    # Drive the real app on Windows: trial, lock, keys, every feature, layout.
+    needs: test
+    runs-on: windows-latest
+    env:
+      LYNCOST_QA_APP: ${{ github.workspace }}\src-tauri\target\debug\lyncost.exe
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+      - name: Build the QA app (test license key, movable clock)
+        run: cargo build --manifest-path src-tauri/Cargo.toml --features qa
+      - name: Install tauri-driver and the matching Edge WebDriver
+        shell: pwsh
+        run: |
+          cargo install tauri-driver --locked
+          $ver = (Get-Item "${env:ProgramFiles(x86)}\Microsoft\Edge\Application\msedge.exe").VersionInfo.ProductVersion
+          "Edge $ver"
+          try { Invoke-WebRequest "https://msedgedriver.microsoft.com/$ver/edgedriver_win64.zip" -OutFile edgedriver.zip }
+          catch { Invoke-WebRequest "https://msedgedriver.azureedge.net/$ver/edgedriver_win64.zip" -OutFile edgedriver.zip }
+          Expand-Archive edgedriver.zip -DestinationPath edgedriver
+      - name: Start tauri-driver
+        shell: pwsh
+        run: |
+          Start-Process tauri-driver -ArgumentList "--native-driver", "$pwd\edgedriver\msedgedriver.exe" -RedirectStandardOutput driver.log -RedirectStandardError driver.err
+          Start-Sleep -Seconds 3
+      - name: Trial and license
+        working-directory: scripts/qa
+        run: python license_flows.py
+      - name: Every feature
+        working-directory: scripts/qa
+        run: |
+          python seed.py
+          python flows.py
+      - name: Layout (no clipped or wrapped labels)
+        working-directory: scripts/qa
+        run: python layout_check.py 135790
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: windows-qa-screenshots
+          path: src-tauri/target/qa/shots/
+
   release:
     if: startsWith(github.ref, 'refs/tags/v')
-    needs: [audit, install-test]
+    needs: [audit, install-test, smoke-windows, qa-windows]
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
+      - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
           name: linux-packages
           path: out
+      - uses: actions/download-artifact@v4
+        with:
+          name: windows-installer
+          path: win
+      - name: Windows installer, update feed, and checksums
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          setup="$(cd win && ls *-setup.exe)"
+          cp "win/$setup" out/
+          if [ -f "win/$setup.sig" ]; then
+            jq -n --arg v "$version" --arg sig "$(cat "win/$setup.sig")" \
+              --arg url "https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF_NAME}/$setup" \
+              --arg date "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+              '{version: $v, notes: "See what is new at https://github.com/UltraDarshan/lyncost/blob/main/CHANGELOG.md", pub_date: $date,
+                platforms: {"windows-x86_64": {signature: $sig, url: $url}}}' > out/latest.json
+            cat out/latest.json
+          else
+            echo "::warning::No updater signature: this release has no latest.json, so Windows apps will not see it as an update."
+          fi
+          (cd out && rm -f SHA256SUMS && sha256sum $(ls | grep -v latest.json) > SHA256SUMS && cat SHA256SUMS)
       - uses: softprops/action-gh-release@v2
         with:
           files: out/*
