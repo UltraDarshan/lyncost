@@ -1,0 +1,25 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "bundle": {
+    "targets": ["nsis"],
+    "homepage": "https://wintershogun.com/products/lyncost",
+    "licenseFile": "../LICENSE",
+    "createUpdaterArtifacts": true,
+    "windows": {
+      "webviewInstallMode": { "type": "downloadBootstrapper", "silent": true },
+      "nsis": {
+        "installMode": "currentUser",
+        "installerIcon": "icons/icon.ico",
+        "languages": ["English"],
+        "displayLanguageSelector": false
+      }
+    }
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDk5OTY1ODhGNUEwOTkwMTUKUldRVmtBbGFqMWlXbWJqTjdBVUJJU1Vqc3VvbFUvbzZ1U1JKeE9hK2NDMHMwSm5FNm95L2UzOUsK",
+      "endpoints": ["https://github.com/UltraDarshan/lyncost/releases/latest/download/latest.json"],
+      "windows": { "installMode": "passive" }
+    }
+  }
+}

@@ -7,3 +7,7 @@ src-tauri/target/
 .DS_Store
 __pycache__/
 *.pyc
+
+# License signing keys never go in git (the QA test key is the one exception).
+*.pem
+!scripts/license/test-private.pem

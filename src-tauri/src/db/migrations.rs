@@ -28,6 +28,7 @@ const MIGRATIONS: &[(i64, Step)] = &[
     (9, Step::Sql(include_str!("migrations/009_trial_started_at.sql"))),
     (10, Step::Repair),
     (11, Step::Sql(include_str!("migrations/011_bill_payment_links.sql"))),
+    (12, Step::Sql(include_str!("migrations/012_license.sql"))),
 ];
 
 /// Migration 007 rebuilds `transactions`, which needs foreign keys off.

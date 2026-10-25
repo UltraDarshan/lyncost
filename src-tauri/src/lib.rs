@@ -4,6 +4,7 @@ mod commands;
 mod db;
 mod fx;
 mod ledger;
+mod license;
 mod security;
 mod util;
 
@@ -20,7 +21,7 @@ pub fn run() {
     #[cfg(target_os = "linux")]
     linux_webkit_workarounds();
 
-    tauri::Builder::default()
+    let builder = tauri::Builder::default()
         .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
             if let Some(window) = app.get_webview_window("main") {
                 let _ = window.unminimize();
@@ -28,15 +29,37 @@ pub fn run() {
             }
         }))
         .plugin(tauri_plugin_opener::init())
-        .plugin(tauri_plugin_notification::init())
+        .plugin(tauri_plugin_notification::init());
+    #[cfg(windows)]
+    let builder = builder.plugin(tauri_plugin_updater::Builder::new().build());
+    builder
         .setup(|app| {
             let data_dir = app.path().app_data_dir()?;
             app.manage(AppState::new(data_dir));
             Ok(())
         })
-        .invoke_handler(handlers())
+        .invoke_handler(license_gate(handlers()))
         .run(tauri::generate_context!())
         .expect("error while running Lyncost");
+}
+
+/// Refuses record-changing commands once the Windows trial has ended without a license.
+/// Enforced here, in the backend, so editing the page or its storage cannot get around it.
+fn license_gate<R: Runtime>(
+    inner: impl Fn(tauri::ipc::Invoke<R>) -> bool + Send + Sync + 'static,
+) -> impl Fn(tauri::ipc::Invoke<R>) -> bool + Send + Sync + 'static {
+    move |invoke| {
+        if license::gate_enabled() && license::blocks(invoke.message.command()) {
+            let app = invoke.message.webview().app_handle().clone();
+            let state = app.state::<AppState>();
+            let unlocked = state.conn().and_then(|c| license::current_status(&c)).map(|s| s.unlocked()).unwrap_or(false);
+            if !unlocked {
+                invoke.resolver.reject(license::LOCKED_MESSAGE);
+                return true;
+            }
+        }
+        inner(invoke)
+    }
 }
 
 /// Every command the frontend can invoke. Generic so tests can use the mock runtime.
@@ -52,7 +75,9 @@ fn handlers<R: Runtime>() -> impl Fn(tauri::ipc::Invoke<R>) -> bool + Send + Syn
         settings::update_notification_settings,
         settings::wipe_all_data,
         system::get_trial_status,
+        system::get_license_status,
         system::verify_license_key,
+        system::qa_set_clock_offset,
         system::check_app_update,
         system::install_app_update,
         system::restart_application,

@@ -13,7 +13,8 @@ mkdir -p "$QA/data" "$QA/shots"
 case "${1:-start}" in
   build)
     cd "$ROOT/src-tauri"
-    TAURI_CONFIG='{"identifier":"com.lyncost.qa","productName":"LyncostQA"}' cargo build ;;
+    # QA keys + movable clock; license-gate turns the Windows license on here too.
+    TAURI_CONFIG='{"identifier":"com.lyncost.qa","productName":"LyncostQA"}' cargo build --features qa,license-gate ;;
   start)
     if ! pgrep -x Xvfb >/dev/null; then
       (setsid nohup Xvfb :99 -screen 0 1920x1200x24 -nolisten tcp >"$QA/xvfb.log" 2>&1 &)
@@ -21,11 +22,11 @@ case "${1:-start}" in
     i=0; while [ ! -S /tmp/.X11-unix/X99 ] && [ $i -lt 50 ]; do sleep 0.1; i=$((i + 1)); done
     [ -S /tmp/.X11-unix/X99 ] || { echo "Xvfb failed to start (see $QA/xvfb.log)" >&2; exit 1; }
     pgrep -x tauri-driver >/dev/null || (cd "$QA" && env -u WAYLAND_DISPLAY DISPLAY=:99 GDK_BACKEND=x11 \
-        XDG_DATA_HOME="$QA/data" setsid nohup tauri-driver >"$QA/tauri-driver.log" 2>&1 &)
+        XDG_DATA_HOME="$QA/data" XDG_CONFIG_HOME="$QA/config" setsid nohup tauri-driver >"$QA/tauri-driver.log" 2>&1 &)
     sleep 2; echo "QA environment ready (data: $QA/data)" ;;
   stop)
     pkill -x tauri-driver || true; pkill -x WebKitWebDriver || true; pkill -x Xvfb || true
     i=0; while pgrep -x 'Xvfb|tauri-driver|WebKitWebDriver' >/dev/null && [ $i -lt 50 ]; do sleep 0.1; i=$((i + 1)); done ;;
   reset)
-    rm -rf "$QA/data" && mkdir -p "$QA/data" && echo "QA data wiped" ;;
+    rm -rf "$QA/data" "$QA/config" && mkdir -p "$QA/data" && echo "QA data wiped" ;;
 esac

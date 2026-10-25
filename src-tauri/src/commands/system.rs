@@ -1,21 +1,21 @@
 //! App lifecycle: update check, restart, and the Windows trial/license gate.
+// Windows uses the updater plugin instead of version.json, so the Linux helpers go unused there.
+#![cfg_attr(windows, allow(dead_code, unused_imports))]
 
 use std::process::Command;
 
-use chrono::{DateTime, Utc};
-use rusqlite::params;
 use serde::{Deserialize, Serialize};
 use tauri::{AppHandle, Runtime, State};
 use tauri_plugin_opener::OpenerExt;
 
 use crate::db::AppState;
+use crate::license::{self, LicenseStatus};
 use crate::util::{CmdResult, Ctx};
 
 /// Published alongside each release; see `version.json` in the repository root.
 const VERSION_MANIFEST_URL: &str = "https://raw.githubusercontent.com/UltraDarshan/lyncost/main/version.json";
 const RELEASES_PAGE: &str = "https://github.com/UltraDarshan/lyncost/releases/latest";
 const TRUSTED_DOWNLOAD_PREFIX: &str = "https://github.com/UltraDarshan/lyncost/";
-const TRIAL_DAYS: i64 = 14;
 
 #[derive(Deserialize)]
 struct VersionManifest {
@@ -70,6 +70,8 @@ fn fetch(url: &str) -> CmdResult<String> {
     String::from_utf8(out.stdout).ctx("Invalid response from update server")
 }
 
+/// Linux: compares with `version.json`; the package manager installs the update.
+#[cfg(not(windows))]
 #[tauri::command]
 pub async fn check_app_update() -> CmdResult<UpdateInfo> {
     let current = env!("CARGO_PKG_VERSION").to_string();
@@ -92,7 +94,43 @@ pub async fn check_app_update() -> CmdResult<UpdateInfo> {
     })
 }
 
-/// Opens the release page; packages are installed by the system package manager.
+/// Windows: the signed update feed (`latest.json` on GitHub Releases, checked against the
+/// updater public key in tauri.windows.conf.json), installed in place by the app itself.
+#[cfg(windows)]
+#[tauri::command]
+pub async fn check_app_update<R: Runtime>(app: AppHandle<R>) -> CmdResult<UpdateInfo> {
+    use tauri_plugin_updater::UpdaterExt;
+    let current = env!("CARGO_PKG_VERSION").to_string();
+    let update = app
+        .updater()
+        .ctx("Updates are unavailable")?
+        .check()
+        .await
+        .map_err(|_| "Could not reach the update server. Please check your internet connection.".to_string())?;
+    Ok(match update {
+        Some(u) => UpdateInfo {
+            has_update: true,
+            current_version: current,
+            latest_version: u.version.clone(),
+            release_notes: u.body.clone(),
+            published_at: u.date.map(|d| d.to_string()),
+            download_url: RELEASES_PAGE.to_string(),
+            install_mode: "installer",
+        },
+        None => UpdateInfo {
+            has_update: false,
+            latest_version: current.clone(),
+            current_version: current,
+            release_notes: None,
+            published_at: None,
+            download_url: RELEASES_PAGE.to_string(),
+            install_mode: "installer",
+        },
+    })
+}
+
+/// Linux: opens the release page; packages are installed by the system package manager.
+#[cfg(not(windows))]
 #[tauri::command]
 #[allow(non_snake_case)]
 pub fn install_app_update<R: Runtime>(app: AppHandle<R>, downloadUrl: Option<String>) -> CmdResult<()> {
@@ -100,11 +138,29 @@ pub fn install_app_update<R: Runtime>(app: AppHandle<R>, downloadUrl: Option<Str
         .filter(|u| u.starts_with(TRUSTED_DOWNLOAD_PREFIX))
         .unwrap_or_else(|| RELEASES_PAGE.to_string());
     app.opener().open_url(&url, None::<&str>).ctx("Could not open the download page")?;
-    Err(if cfg!(target_os = "linux") {
-        "The download page is open in your browser. Install the new .rpm/.deb (or re-run the install script), then restart Lyncost.".into()
-    } else {
-        "The download page is open in your browser. Run the new installer to update Lyncost.".into()
-    })
+    Err("The download page is open in your browser. Install the new .rpm/.deb (or re-run the install script), then restart Lyncost.".into())
+}
+
+/// Windows: downloads the signed installer, verifies it, and runs it. The installer closes
+/// Lyncost, updates it in place (data and license are kept), and opens it again.
+#[cfg(windows)]
+#[tauri::command]
+#[allow(non_snake_case)]
+pub async fn install_app_update<R: Runtime>(app: AppHandle<R>, downloadUrl: Option<String>) -> CmdResult<()> {
+    use tauri_plugin_updater::UpdaterExt;
+    let _ = downloadUrl;
+    let update = app
+        .updater()
+        .ctx("Updates are unavailable")?
+        .check()
+        .await
+        .map_err(|_| "Could not reach the update server. Please check your internet connection.".to_string())?
+        .ok_or_else(|| "You already have the latest version.".to_string())?;
+    update
+        .download_and_install(|_, _| {}, || {})
+        .await
+        .map_err(|e| format!("The update could not be installed: {e}"))?;
+    app.restart();
 }
 
 #[tauri::command]
@@ -120,43 +176,40 @@ pub struct TrialStatus {
     is_expired: bool,
 }
 
-/// Windows trial clock, started on first call and stored in the database.
-/// (The UI only shows the trial gate on Windows; Linux builds are free.)
+/// Trial clock for the activation screens (see `license.rs`). Starts on the first run.
 #[tauri::command]
 pub fn get_trial_status(state: State<'_, AppState>) -> CmdResult<TrialStatus> {
-    let conn = state.conn()?;
-    let stored: Option<String> = conn
-        .query_row("SELECT trial_started_at FROM app_settings WHERE id = 1", [], |r| r.get(0))
-        .ctx("Failed to read trial status")?;
-    let started = match stored.as_deref().and_then(|s| DateTime::parse_from_rfc3339(s).ok()) {
-        Some(t) => t.with_timezone(&Utc),
-        None => {
-            let now = Utc::now();
-            conn.execute("UPDATE app_settings SET trial_started_at = ?1 WHERE id = 1", params![now.to_rfc3339()])
-                .ctx("Failed to start trial")?;
-            now
-        }
-    };
-    let elapsed = (Utc::now() - started).num_days().max(0);
-    let remaining = (TRIAL_DAYS - elapsed).max(0);
+    let s = license::current_status(&*state.conn()?)?;
+    let is_expired = !s.unlocked();
     Ok(TrialStatus {
-        started_at: started.to_rfc3339(),
-        days_total: TRIAL_DAYS,
-        days_remaining: remaining,
-        is_expired: remaining == 0,
+        started_at: s.trial_started_at,
+        days_total: s.days_total,
+        days_remaining: s.days_remaining,
+        is_expired,
     })
 }
 
-/// Offline license verification for the paid Windows build.
-///
-/// TODO(windows-release): restore LYNC2- key verification. The original build
-/// checked an Ed25519 signature against a public key that was lost with the
-/// source; it must be re-added (from the key generator behind
-/// lyncost.vercel.app/license) before shipping a Windows release.
+/// Full license state: free (Linux), trial, licensed, or expired.
 #[tauri::command]
-pub fn verify_license_key(key: String) -> bool {
-    let _ = key;
-    false
+pub fn get_license_status(state: State<'_, AppState>) -> CmdResult<LicenseStatus> {
+    license::current_status(&*state.conn()?)
+}
+
+/// Checks a key and, when it is genuine, activates it on this computer.
+/// (The activation screen calls this and only shows success when it returns true.)
+#[tauri::command]
+pub fn verify_license_key(state: State<'_, AppState>, key: String) -> bool {
+    let Ok(conn) = state.conn() else { return false };
+    license::activate(&conn, &license::system_stores(), &license::Sealer::system(), &key).is_some()
+}
+
+/// QA builds only: move the app's clock forward to test the end of the trial.
+/// Does nothing in release builds.
+#[tauri::command]
+pub fn qa_set_clock_offset(hours: i64) {
+    #[cfg(feature = "qa")]
+    license::QA_CLOCK_OFFSET_HOURS.store(hours, std::sync::atomic::Ordering::Relaxed);
+    let _ = hours;
 }
 
 #[cfg(test)]

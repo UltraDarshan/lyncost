@@ -1,6 +1,8 @@
 """Minimal W3C WebDriver client + helpers for driving the Lyncost QA build."""
 import base64
 import json
+import os
+import sys
 import time
 import urllib.error
 import urllib.request
@@ -10,7 +12,8 @@ BASE = "http://127.0.0.1:4444"
 ROOT = Path(__file__).resolve().parents[2]
 QA = ROOT / "src-tauri" / "target" / "qa"
 SHOTS = QA / "shots"
-APP = ROOT / "src-tauri" / "target" / "debug" / "lyncost"
+# The QA build; LYNCOST_QA_APP points elsewhere (for example the Windows CI build).
+APP = Path(os.environ.get("LYNCOST_QA_APP") or ROOT / "src-tauri" / "target" / "debug" / ("lyncost.exe" if sys.platform == "win32" else "lyncost"))
 SESSION_FILE = QA / "session.txt"
 
 
@@ -48,7 +51,7 @@ class Session:
         return cls(SESSION_FILE.read_text().strip())
 
     @classmethod
-    def restart(cls):
+    def restart(cls, keep_welcome=False):
         try:
             cls.attach().close()
         except Exception:
@@ -58,6 +61,10 @@ class Session:
         time.sleep(2.5)
         s.js("window.__errs=[];window.addEventListener('error',e=>window.__errs.push('E:'+e.message));"
              "window.addEventListener('unhandledrejection',e=>window.__errs.push('R:'+String(e.reason)))")
+        # First run of a gated build shows the trial welcome over everything; only license_flows checks it.
+        if not keep_welcome and "Congratulations!" in s.text() and "Start using Lyncost" in s.text():
+            s.click_text("Start using Lyncost")
+            time.sleep(0.5)
         return s
 
     def p(self, path):
