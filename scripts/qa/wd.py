@@ -104,7 +104,13 @@ class Session:
                 "if (!el.children.length && /LYNC3-/i.test(el.value || el.textContent)) el.style.filter = 'blur(6px)'")
         SHOTS.mkdir(parents=True, exist_ok=True)
         path = SHOTS / f"{name}.png"
-        path.write_bytes(base64.b64decode(req("GET", self.p("/screenshot"))))
+        if os.environ.get("LYNCOST_DESKTOP_SHOTS"):
+            # The whole screen (window frame, title bar, taskbar), as a person sees it.
+            from PIL import ImageGrab
+            time.sleep(0.4)
+            ImageGrab.grab(all_screens=True).save(path)
+        else:
+            path.write_bytes(base64.b64decode(req("GET", self.p("/screenshot"))))
         return path
 
     def close(self):

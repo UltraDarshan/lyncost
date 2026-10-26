@@ -15,6 +15,7 @@ jobs:
     env:
       LYNCOST_QA_APP: C:\Users\runneradmin\AppData\Local\Lyncost\lyncost.exe
       PYTHONIOENCODING: utf-8
+      LYNCOST_DESKTOP_SHOTS: "1"
       LYNCOST_TEST_LICENSE: ${{ secrets.LYNCOST_TEST_LICENSE }}
       GH_TOKEN: ${{ github.token }}
       TAG: ${{ inputs.tag }}
@@ -23,6 +24,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Full HD screen and screenshot library
+        shell: pwsh
+        run: |
+          pip install pillow
+          try { Set-DisplayResolution -Width 1920 -Height 1080 -Force } catch { "Could not change resolution: $_" }
+          Add-Type -AssemblyName System.Windows.Forms
+          "Screen: $([System.Windows.Forms.Screen]::PrimaryScreen.Bounds)"
       - name: Install the released setup.exe silently
         shell: pwsh
         run: |
