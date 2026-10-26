@@ -668,3 +668,15 @@ input, textarea { caret-color: var(--lc-accent); }
 main .grid.border-t[class*="sm:grid-cols-3"] {
   grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr)) !important;
 }
+
+/* Narrow windows (about 1024px): rows of text beside a divider or a control squeezed the text
+   until it spilled. Let those rows wrap instead. */
+main div:has(> div > span.block + span[class*="text-[11px]"]),
+main div:has(> div[class*="h-6"][class*="w-px"]) {
+  flex-wrap: wrap;
+  row-gap: 0.5rem;
+}
+main div:has(> div > span.block + span[class*="text-[11px]"]) > div:first-child {
+  flex: 1 1 14rem;
+  min-width: 0;
+}
