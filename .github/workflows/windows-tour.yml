@@ -16,6 +16,7 @@ jobs:
       LYNCOST_QA_APP: C:\Users\runneradmin\AppData\Local\Lyncost\lyncost.exe
       LYNCOST_TEST_LICENSE: ${{ secrets.LYNCOST_TEST_LICENSE }}
       GH_TOKEN: ${{ github.token }}
+      TAG: ${{ inputs.tag }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -24,7 +25,7 @@ jobs:
       - name: Install the released setup.exe silently
         shell: pwsh
         run: |
-          gh release download "${{ inputs.tag }}" --repo "${{ github.repository }}" --pattern "*-setup.exe" --dir setup
+          gh release download $env:TAG --repo $env:GITHUB_REPOSITORY --pattern "*-setup.exe" --dir setup
           $setup = Get-ChildItem setup\*-setup.exe | Select-Object -First 1
           "Installing $($setup.Name)"
           Start-Process $setup.FullName -ArgumentList '/S' -Wait
