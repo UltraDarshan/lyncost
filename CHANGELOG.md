@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.1 — 2026-10-26
+
+Display fixes found by testing the Windows edition on a real Windows machine.
+
+- Debts: a loan card's three amounts no longer overlap in narrower windows (Windows fonts).
+- Narrow windows: Dashboard totals and Settings rows wrap instead of spilling out of their boxes.
+- Shorter labels that fit on one line: the goal button is now "Deposit", the theme switch "Light" / "Dark".
+
 ## 1.1.0 — 2026-10-25
 
 Lyncost for Windows, and a few fixes for everyone.
