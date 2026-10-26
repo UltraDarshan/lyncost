@@ -59,7 +59,12 @@ class Session:
             pass
         time.sleep(1)
         s = cls()
-        time.sleep(2.5)
+        # Wait for the app to finish starting (a fixed pause was flaky on slow CI machines).
+        for _ in range(60):
+            if s.js("return (document.body.innerText || '').length > 100"):
+                break
+            time.sleep(0.5)
+        time.sleep(1)
         s.js("window.__errs=[];window.addEventListener('error',e=>window.__errs.push('E:'+e.message));"
              "window.addEventListener('unhandledrejection',e=>window.__errs.push('R:'+String(e.reason)))")
         # First run of a gated build shows the trial welcome over everything; only license_flows checks it.
