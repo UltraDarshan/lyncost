@@ -4,6 +4,7 @@
 """
 import datetime as dt
 import os
+import sys
 import time
 import traceback
 
@@ -147,8 +148,8 @@ def categories_budgets_goals():
     g = find("get_goals", "name", "QA Laptop")
     check("create goal", g and g["current_amount"] == 10000)
     s.js("""const t=[...document.querySelectorAll('main *')].find(e=>e.childElementCount===0&&e.textContent.trim()==='QA Laptop');
-            let c=t; while(c && ![...c.querySelectorAll('button')].some(b=>/^Deposit$/.test(b.innerText))) c=c.parentElement;
-            [...c.querySelectorAll('button')].find(b=>/^Deposit$/.test(b.innerText)).click();""")
+            let c=t; while(c && ![...c.querySelectorAll('button')].some(b=>/Deposit$/.test(b.innerText))) c=c.parentElement;
+            [...c.querySelectorAll('button')].find(b=>/Deposit$/.test(b.innerText)).click();""")
     time.sleep(1); fill("Amount", "15000"); modal("Add Deposit")
     check("goal deposit", find("get_goals", "name", "QA Laptop")["current_amount"] == 25000)
 
@@ -277,3 +278,4 @@ def smooth_navigation():
 
 fails = [r for r in results if not r[0]]
 print(f"\n{len(results) - len(fails)} passed, {len(fails)} failed; JS errors: {s.errors()}")
+sys.exit(1 if fails else 0)

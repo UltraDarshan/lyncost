@@ -57,7 +57,7 @@ jobs:
         working-directory: scripts/qa
         run: |
           if (-not $env:LYNCOST_TEST_LICENSE) { throw "Set the LYNCOST_TEST_LICENSE repository secret first" }
-          $driver = Start-Process tauri-driver -ArgumentList "--native-driver", "$env:GITHUB_WORKSPACE\edgedriver\msedgedriver.exe" -PassThru
+          $driver = Start-Process tauri-driver -ArgumentList "--native-driver", "$env:GITHUB_WORKSPACE\edgedriver\msedgedriver.exe" -PassThru -WindowStyle Hidden
           for ($i = 0; $i -lt 30 -and -not (Test-NetConnection 127.0.0.1 -Port 4444 -InformationLevel Quiet -WarningAction SilentlyContinue); $i++) { Start-Sleep 1 }
           function Run { python @args; if ($LASTEXITCODE -ne 0) { throw "$($args -join ' ') failed" } }
           Run tour.py
