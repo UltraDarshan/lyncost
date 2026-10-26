@@ -48,6 +48,12 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="1.1.1" date="2026-10-26">
+      <description><p>Display fixes: loan cards and narrow windows.</p></description>
+    </release>
+    <release version="1.1.0" date="2026-10-25">
+      <description><p>Settings shows the real version; links point to wintershogun.com.</p></description>
+    </release>
     <release version="1.0.0" date="2026-10-24"/>
     <release version="0.2.6" date="2026-10-24">
       <description>

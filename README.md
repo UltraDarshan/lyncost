@@ -98,10 +98,7 @@ and run `python3 scripts/check-ipc-contract.py` after any backend change.
 
 ## Releasing
 
-1. `python3 scripts/set-version.py X.Y.Z`
-2. Update `CHANGELOG.md` and `version.json`.
-3. `npm test && npm run build:rpm`
-4. Commit, tag `vX.Y.Z`, push; attach the packages to the GitHub release.
+Follow [RELEASING.md](RELEASING.md): the full checklist from testing to the published release and the website.
 
 ## License
 
