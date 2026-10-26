@@ -662,3 +662,9 @@ input, textarea { caret-color: var(--lc-accent); }
   background-clip: content-box;
 }
 ::-webkit-scrollbar-thumb:hover { background-color: var(--lc-muted); }
+
+/* Loan cards: the three amounts switch to three columns by window width, so in a narrow card they
+   overlapped. Size the columns by the card instead and let them wrap. */
+main .grid.border-t[class*="sm:grid-cols-3"] {
+  grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr)) !important;
+}

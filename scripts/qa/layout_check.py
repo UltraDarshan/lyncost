@@ -56,10 +56,22 @@ for (const e of all) {
     if (r.right > cr.right + 1 || r.left < cr.left - 1) key('overflow');
   }
 }
+// Text must stay inside its own grid column (the loan card's amounts once ran into each other).
+for (const g of document.querySelectorAll('main .grid')) {
+  for (const cell of g.children) {
+    const c = cell.getBoundingClientRect();
+    if (!c.width) continue;
+    for (const el of cell.querySelectorAll('span, p')) {
+      const r = el.getBoundingClientRect();
+      if (r.width && el.children.length === 0 && r.right > c.right + 2)
+        out.push(['spill', (el.innerText || '').trim().slice(0, 40)]);
+    }
+  }
+}
 return out;
 """
 
-SIZES = [(1366, 768), (1100, 720), (900, 650)]
+SIZES = [(1366, 768), (1100, 720), (1024, 720), (900, 650)]
 
 
 def main():

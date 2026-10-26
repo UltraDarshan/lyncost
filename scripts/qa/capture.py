@@ -1,4 +1,4 @@
-"""Screenshot pages in both themes: python3 scripts/qa/capture.py <prefix> [page,page,...]"""
+"""Screenshot pages in both themes: python3 scripts/qa/capture.py <prefix> [all|page,page,...] [pin]"""
 import sys
 import time
 
@@ -11,7 +11,7 @@ PAGES = ["Dashboard", "Transactions", "Accounts", "Budgets", "Financial Goals", 
 
 def main():
     prefix = sys.argv[1] if len(sys.argv) > 1 else "page"
-    pages = sys.argv[2].split(",") if len(sys.argv) > 2 else PAGES
+    pages = sys.argv[2].split(",") if len(sys.argv) > 2 and sys.argv[2] != "all" else PAGES
     s = Session.restart()
     s.unlock(sys.argv[3] if len(sys.argv) > 3 else "")
     for _ in range(2):
