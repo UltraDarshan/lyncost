@@ -206,6 +206,7 @@ jobs:
     runs-on: windows-latest
     env:
       LYNCOST_QA_APP: ${{ github.workspace }}\src-tauri\target\debug\lyncost.exe
+      PYTHONIOENCODING: utf-8
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

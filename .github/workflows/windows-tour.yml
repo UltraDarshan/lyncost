@@ -14,6 +14,7 @@ jobs:
     runs-on: windows-latest
     env:
       LYNCOST_QA_APP: C:\Users\runneradmin\AppData\Local\Lyncost\lyncost.exe
+      PYTHONIOENCODING: utf-8
       LYNCOST_TEST_LICENSE: ${{ secrets.LYNCOST_TEST_LICENSE }}
       GH_TOKEN: ${{ github.token }}
       TAG: ${{ inputs.tag }}
