@@ -13,6 +13,9 @@ def main():
     prefix = sys.argv[1] if len(sys.argv) > 1 else "page"
     pages = sys.argv[2].split(",") if len(sys.argv) > 2 and sys.argv[2] != "all" else PAGES
     s = Session.restart()
+    # The app's own first-run "Quick Setup" would cover every page; mark it done.
+    s.js("localStorage.setItem('lyncost_wizard_completed', 'true'); location.reload()")
+    time.sleep(3)
     s.unlock(sys.argv[3] if len(sys.argv) > 3 else "")
     for _ in range(2):
         theme = s.invoke("get_app_settings")["theme"]
