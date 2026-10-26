@@ -99,6 +99,9 @@ class Session:
             time.sleep(3)
 
     def shot(self, name):
+        # Screenshots may be public (CI artifacts), so license keys are blurred first.
+        self.js("for (const el of document.querySelectorAll('textarea, code, span, p, div')) "
+                "if (!el.children.length && /LYNC3-/i.test(el.value || el.textContent)) el.style.filter = 'blur(6px)'")
         SHOTS.mkdir(parents=True, exist_ok=True)
         path = SHOTS / f"{name}.png"
         path.write_bytes(base64.b64decode(req("GET", self.p("/screenshot"))))

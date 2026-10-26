@@ -1,0 +1,62 @@
+name: Windows screenshot tour
+
+# Installs a released Windows setup.exe exactly as a customer would, activates it with a real
+# license key (repository secret LYNCOST_TEST_LICENSE), and screenshots every page in both themes.
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag to test
+        default: v1.1.0
+
+jobs:
+  tour:
+    runs-on: windows-latest
+    env:
+      LYNCOST_QA_APP: C:\Users\runneradmin\AppData\Local\Lyncost\lyncost.exe
+      LYNCOST_TEST_LICENSE: ${{ secrets.LYNCOST_TEST_LICENSE }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install the released setup.exe silently
+        shell: pwsh
+        run: |
+          gh release download "${{ inputs.tag }}" --repo "${{ github.repository }}" --pattern "*-setup.exe" --dir setup
+          $setup = Get-ChildItem setup\*-setup.exe | Select-Object -First 1
+          "Installing $($setup.Name)"
+          Start-Process $setup.FullName -ArgumentList '/S' -Wait
+          if (-not (Test-Path $env:LYNCOST_QA_APP)) { throw "Not installed at $env:LYNCOST_QA_APP" }
+      - name: Edge WebDriver matched to WebView2, and the debugging policy (CI machine only)
+        shell: pwsh
+        run: |
+          $key = "HKLM:\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}"
+          $ver = (Get-ItemProperty $key).pv
+          "WebView2 $ver"
+          try { Invoke-WebRequest "https://msedgedriver.microsoft.com/$ver/edgedriver_win64.zip" -OutFile edgedriver.zip }
+          catch { Invoke-WebRequest "https://msedgedriver.azureedge.net/$ver/edgedriver_win64.zip" -OutFile edgedriver.zip }
+          Expand-Archive edgedriver.zip -DestinationPath edgedriver
+          cargo install tauri-driver --locked
+          $policy = "HKLM:\SOFTWARE\Policies\Microsoft\Edge\WebView2\AdditionalBrowserArguments"
+          New-Item -Path $policy -Force | Out-Null
+          New-ItemProperty -Path $policy -Name "lyncost.exe" -Value "--remote-debugging-port=0" -PropertyType String -Force | Out-Null
+      - name: Tour, every page in both themes, every feature
+        shell: pwsh
+        working-directory: scripts/qa
+        run: |
+          if (-not $env:LYNCOST_TEST_LICENSE) { throw "Set the LYNCOST_TEST_LICENSE repository secret first" }
+          $driver = Start-Process tauri-driver -ArgumentList "--native-driver", "$env:GITHUB_WORKSPACE\edgedriver\msedgedriver.exe" -PassThru
+          for ($i = 0; $i -lt 30 -and -not (Test-NetConnection 127.0.0.1 -Port 4444 -InformationLevel Quiet -WarningAction SilentlyContinue); $i++) { Start-Sleep 1 }
+          function Run { python @args; if ($LASTEXITCODE -ne 0) { throw "$($args -join ' ') failed" } }
+          Run tour.py
+          Run seed.py
+          Run capture.py page
+          Run flows.py
+          Stop-Process -Id $driver.Id -Force -ErrorAction SilentlyContinue
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: windows-tour-screenshots
+          path: src-tauri/target/qa/shots/
