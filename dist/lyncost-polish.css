@@ -671,12 +671,13 @@ main .grid.border-t[class*="sm:grid-cols-3"] {
 
 /* Narrow windows (about 1024px): rows of text beside a divider or a control squeezed the text
    until it spilled. Let those rows wrap instead. */
-main div:has(> div > span.block + span[class*="text-[11px]"]),
+main div:is(.sm\:flex-row, :not(.flex-col)):has(> div > span.block + span[class*="text-[11px]"]),
 main div:has(> div[class*="h-6"][class*="w-px"]) {
   flex-wrap: wrap;
   row-gap: 0.5rem;
 }
-main div:has(> div > span.block + span[class*="text-[11px]"]) > div:first-child {
+/* Only side-by-side rows: in stacked cards (flex-col) a 14rem basis would set their height. */
+main div:is(.sm\:flex-row, :not(.flex-col)):has(> div > span.block + span[class*="text-[11px]"]) > div:first-child {
   flex: 1 1 14rem;
   min-width: 0;
 }
