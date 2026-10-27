@@ -23,7 +23,7 @@
     </ul>
   </description>
   <launchable type="desktop-id">Lyncost.desktop</launchable>
-  <url type="homepage">https://lyncost.wintershogun.com</url>
+  <url type="homepage">https://wintershogun.com/products/lyncost</url>
   <url type="vcs-browser">https://github.com/UltraDarshan/lyncost</url>
   <url type="bugtracker">https://github.com/UltraDarshan/lyncost/issues</url>
   <categories>
@@ -40,11 +40,11 @@
   <screenshots>
     <screenshot type="default">
       <caption>Dashboard: monthly totals, account balances, financial health, and a 30-day projection</caption>
-      <image>https://lyncost.wintershogun.com/images/lyncost/screenshot-dashboard.png</image>
+      <image>https://wintershogun.com/images/lyncost/screenshot-dashboard.png</image>
     </screenshot>
     <screenshot>
       <caption>Investments: portfolio value, profit and loss, and allocation</caption>
-      <image>https://lyncost.wintershogun.com/images/lyncost/screenshot-investments.png</image>
+      <image>https://wintershogun.com/images/lyncost/screenshot-investments.png</image>
     </screenshot>
   </screenshots>
   <releases>

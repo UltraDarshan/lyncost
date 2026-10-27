@@ -2,7 +2,7 @@
 name = "lyncost"
 version = "1.1.1"
 description = "Lyncost - 100% Offline, Privacy-First Personal Finance & Investment Tracker"
-authors = ["Wintershogun TechLabs"]
+authors = ["UltraDarshan <darshantech@proton.me>", "Wintershogun TechLabs"]
 license = "LicenseRef-Proprietary"
 repository = "https://github.com/UltraDarshan/lyncost"
 edition = "2021"

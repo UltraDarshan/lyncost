@@ -1,27 +1,36 @@
-# Security policy
+# Security Policy
 
-## Reporting a vulnerability
+## Reporting a Vulnerability
 
-Please **do not** open a public issue for security problems.
+Please **do not** open public GitHub issues for sensitive security problems.
 
-Email **contact@wintershogun.com** with the subject "Lyncost security". Include the Lyncost version,
-your Linux distribution, and steps to reproduce. Please do not include your real financial data.
+Email **contact@wintershogun.com** with the subject **"Lyncost Security Disclosure"**.
 
-We aim to acknowledge reports within 2 business days and will keep you updated until the issue is
-fixed. Once a fix is released, we are happy to credit you in the changelog if you wish.
+Please include:
+- A description of the issue and potential impact
+- Your operating system and Lyncost version
+- Proof of concept or reproduction steps (*without real financial data*)
 
-## Supported versions
+We acknowledge reports within 48 hours and will keep you informed as we investigate and deploy a fix. Once resolved, we are happy to credit you in our release notes if desired.
 
-Security fixes are made for the latest release only. Update by running the install command again:
+## Supported Versions
+
+Security patches and dependency updates are provided for the latest stable release:
+
+| Version | Supported |
+| :--- | :--- |
+| 1.1.x | Yes |
+| < 1.1.0 | No |
+
+Update your installation to the latest release:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/UltraDarshan/lyncost/main/install.sh | sh
 ```
 
-## How Lyncost protects your data
+## Security & Architecture Principles
 
-- All records stay in a local SQLite database in `~/.local/share/com.lyncost.desktop/`.
-- The 6-digit PIN is stored only as a bcrypt hash, with a lockout after repeated wrong attempts.
-- The only network request the app makes is the update check (a small version file from GitHub).
-- Every release is checked against the RustSec advisory database before it is published, and every
-  download is verified against `SHA256SUMS` by the install script.
+- **Zero Cloud Footprint:** All ledgers and personal transactions reside in an ACID-compliant local SQLite database.
+- **PIN Protection:** The 6-digit master PIN is hashed with salted bcrypt and enforced with exponential lockout timers after repeated failed attempts.
+- **Air-Gapped Network Policy:** Lyncost makes no outbound telemetry, ad network, or analytics calls. Network activity is limited exclusively to checking optional GitHub release updates.
+- **Signed Binary Distribution:** Every release build is verified against SHA256 checksums and scanned against the RustSec Advisory Database.

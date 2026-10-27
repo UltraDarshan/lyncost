@@ -1,42 +1,57 @@
 # Lyncost
 
-Private, offline-first personal finance & investment tracker for Linux (Windows version coming soon).
-Built by **Wintershogun TechLabs** · Website: **https://lyncost.wintershogun.com**
+[![Built with Rust](https://img.shields.io/badge/built_with-Rust-dca282?logo=rust&logoColor=white)](https://www.rust-lang.org/)
+[![Tauri v2](https://img.shields.io/badge/framework-Tauri_v2-24c8db?logo=tauri&logoColor=white)](https://tauri.app/)
+[![Database](https://img.shields.io/badge/database-SQLite_ACID-003B57?logo=sqlite&logoColor=white)](https://www.sqlite.org/)
+[![License: Source-Available](https://img.shields.io/badge/license-Source--Available-blue)](LICENSE)
 
-Your data lives in a local SQLite database and never leaves your computer.
+Private, offline-first personal finance and investment tracker for Windows and Linux.  
+Built by **UltraDarshan** & **Wintershogun TechLabs** · [Official Website](https://wintershogun.com/products/lyncost)
 
-## Features
+All financial data lives in a local SQLite database on your own machine. Zero cloud dependencies, zero analytics, and zero bank logins.
 
-- **Accounts & net worth** — bank, cash, credit-card, investment and other accounts with a signed ledger, daily net-worth snapshots and multi-currency conversion.
-- **Transactions** — income, expenses and transfers with tags, pending/confirmed status, linked warranties and CSV import/export.
-- **Budgets & goals** — weekly/monthly/custom budgets with rollover and pace warnings; savings goals with deposits and withdrawals.
-- **Debts & loans** — drawdowns, repayments and credit-line spending with full history.
-- **Investments** — stocks, mutual funds and crypto with P/L in your base currency and price history.
-- **Bills, warranties, shopping list, recurring rules, calculators and reports.**
-- **Security & safety** — bcrypt-hashed 6-digit PIN with brute-force lockout, automatic daily backups, verified restore with a safety copy.
+---
 
-## Install
+## Key Features
 
-One command for any Linux distribution (x86_64):
+- **Accounts & Net Worth:** Bank accounts, cash wallets, credit cards, investments, and loan facilities with a cryptographically signed running ledger and multi-currency conversion.
+- **Transactions & Statements:** Record income, expenses, and transfers with tags. Drag-and-drop CSV statements to import hundreds of transactions in seconds.
+- **Budgets & Cashflow:** Weekly, monthly, and custom category budgets with pace warnings, rollover, and 30-day forward cashflow projections.
+- **Investments & Holdings:** Stocks, mutual funds, gold, and crypto with real-time profit and loss calculations in your base currency.
+- **Debts & Liabilities:** Track loan balances, EMIs, and credit lines with payoff simulators and drawdown history.
+- **Financial Health Cockpit:** Real-time metrics including liquid emergency runway, debt burden ratio, and savings rate.
+- **Security & Backups:** 6-digit PIN with salted bcrypt hashing and brute-force lockout timers. Automatic daily database snapshots and verified restore.
+
+---
+
+## Installation
+
+### Windows 10 & 11 (64-bit)
+
+Download the official installer directly from the website:
+- **[Download Lyncost for Windows (Installer)](https://wintershogun.com/products/lyncost)**
+- Or download the standalone setup executable (`Lyncost_1.1.1_x64-setup.exe`) from [Releases](https://github.com/UltraDarshan/lyncost/releases/latest).
+
+Includes a fully featured 14-day free trial, followed by an optional one-time lifetime license key.
+
+### Linux (Fedora, Ubuntu, Debian, Arch, openSUSE)
+
+Run the one-line automated installer:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/UltraDarshan/lyncost/main/install.sh | sh
 ```
 
-It installs the latest release, verified against its SHA256 checksum, using the best format for
-your system: the `.rpm` on Fedora / RHEL / openSUSE, the `.deb` on Debian / Ubuntu / Mint, or
-otherwise an AppImage in your home folder (no sudo needed). Options:
+The script automatically detects your distribution and installs the native package (`.rpm` on Fedora/RHEL/openSUSE, `.deb` on Debian/Ubuntu/Mint) or places an AppImage in `~/.local/bin` (no sudo required).
 
-```bash
-curl -fsSL https://raw.githubusercontent.com/UltraDarshan/lyncost/main/install.sh | sh -s -- --appimage        # always use the AppImage
-curl -fsSL https://raw.githubusercontent.com/UltraDarshan/lyncost/main/install.sh | sh -s -- --version 1.0.0   # a specific release
-```
+#### Manual Package Downloads
 
-Or download a package from [Releases](https://github.com/UltraDarshan/lyncost/releases/latest) and install it yourself,
-e.g. `sudo dnf install ./Lyncost-1.0.0-1.x86_64.rpm`.
+Download pre-built packages from [Releases](https://github.com/UltraDarshan/lyncost/releases/latest):
+- **Fedora / RHEL / openSUSE:** `sudo dnf install ./Lyncost-1.1.1-1.x86_64.rpm`
+- **Ubuntu / Debian / Mint:** `sudo apt install ./Lyncost_1.1.1_amd64.deb`
+- **Universal AppImage:** `chmod +x Lyncost_1.1.1_amd64.AppImage && ./Lyncost_1.1.1_amd64.AppImage`
 
-Upgrading from an older Lyncost keeps your data: the database is migrated in place on first launch
-(existing PIN, accounts and history are preserved).
+---
 
 ## Uninstall
 
@@ -44,70 +59,89 @@ Upgrading from an older Lyncost keeps your data: the database is migrated in pla
 curl -fsSL https://raw.githubusercontent.com/UltraDarshan/lyncost/main/uninstall.sh | sh
 ```
 
-Your data and backups are kept. To delete them too (asks you to type DELETE to confirm):
+To purge the application along with all local databases and backups (prompts for confirmation):
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/UltraDarshan/lyncost/main/uninstall.sh | sh -s -- --purge
 ```
 
-## Where your data is
+---
 
-| What | Linux path |
-| --- | --- |
-| Database | `~/.local/share/com.lyncost.desktop/lyncost.db` |
-| Automatic & manual backups | `~/.local/share/com.lyncost.desktop/backups/` |
-| CSV exports | `~/Downloads/` |
+## Local Data Storage
 
-## Development
+All data is stored strictly on your local disk in standard application directories:
 
-Requirements: Rust (stable), Node 18+, and on Fedora:
+| Platform | Database Path | Automatic Backups |
+| :--- | :--- | :--- |
+| **Windows** | `%APPDATA%\com.lyncost.desktop\lyncost.db` | `%APPDATA%\com.lyncost.desktop\backups\` |
+| **Linux** | `~/.local/share/com.lyncost.desktop/lyncost.db` | `~/.local/share/com.lyncost.desktop/backups/` |
+
+---
+
+## Architecture & Development
+
+Lyncost uses **Tauri v2** with a native **Rust** backend engine and a bundled React/Tailwind frontend shell.
+
+### Prerequisites
+
+- Rust (stable 1.80+)
+- Node.js 18+
+- System build dependencies (on Fedora):
+  ```bash
+  sudo dnf install webkit2gtk4.1-devel gtk3-devel libsoup3-devel openssl-devel librsvg2-devel
+  ```
+
+### Build & Test
 
 ```bash
-sudo dnf install webkit2gtk4.1-devel gtk3-devel libsoup3-devel openssl-devel librsvg2-devel
+# Install dependencies
 npm install
-npm run dev          # run the app
-npm test             # Rust unit + IPC contract tests, then the frontend/backend contract check
-npm run build:rpm    # -> src-tauri/target/release/bundle/rpm/
+
+# Run the app in development mode
+npm run dev
+
+# Run unit tests and IPC contract checks
+npm test
+
+# Build release packages
+npm run build:linux    # builds rpm, deb, and appimage
 ```
 
-### Project layout
+### Directory Structure
 
 ```
-dist/                     Prebuilt frontend (React/Vite bundle). Its source was lost; see note below.
+dist/                     Bundled UI assets (React / Tailwind)
 src-tauri/
-  src/lib.rs              App setup, plugins and the list of commands exposed to the frontend
-  src/commands/           One file per feature (accounts, transactions, budgets, bills, …)
-  src/db/                 Connection, versioned migrations (migrations/*.sql) and seed data
-  src/ledger.rs           Account ledger: every balance change is a signed ledger row
-  src/fx.rs               Currency conversion through the exchange-rate table
-  src/security.rs         PIN hashing and lockout
-  src/contract_tests.rs   End-to-end tests through Tauri IPC with the frontend's exact payloads
-packaging/linux/          Desktop entry template and AppStream metainfo
+  src/lib.rs              App initialization, Tauri plugins, and IPC command registration
+  src/commands/           Domain command handlers (accounts, transactions, budgets, etc.)
+  src/db/                 SQLite connection, schema migrations, and seed data
+  src/ledger.rs           Financial double-entry signed ledger engine
+  src/fx.rs               Currency conversion engine
+  src/security.rs         PIN verification and lockout protection
+  src/contract_tests.rs   IPC contract verification tests
+packaging/linux/          AppStream metainfo and .desktop entry templates
 scripts/
-  check-ipc-contract.py   Verifies every frontend invoke() matches a Rust command and its arguments
-  set-version.py          Bumps the version everywhere (incl. labels inside dist/)
-  qa/                     Hidden-display UI QA: env.sh (Xvfb + tauri-driver), seed.py,
-                          flows.py (every feature), layout_check.py (wraps/overflow), capture.py
-version.json              Update manifest read by the in-app update check
+  check-ipc-contract.py   Validates IPC signature contracts between frontend and Rust
+  set-version.py          Automates version bumps across Cargo, packages, and manifests
 ```
 
-**About `dist/`:** the original frontend source is gone; `dist/` is the original production build
-recovered from the released app (its asset hashes match the original Windows release exactly).
-The backend was rebuilt to match it. Treat `dist/` as read-only except through `scripts/set-version.py`,
-and run `python3 scripts/check-ipc-contract.py` after any backend change.
+---
 
-## Releasing
+## Security & Verification
 
-Follow [RELEASING.md](RELEASING.md): the full checklist from testing to the published release and the website.
+- Every binary release is cryptographically signed and published with verifiable `SHA256SUMS`.
+- Dependencies are scanned against the RustSec Advisory Database prior to every release tag.
+- For vulnerability disclosures, review [SECURITY.md](SECURITY.md).
+
+---
 
 ## License
 
-Lyncost is **source-available, not open source**. The code is public so you can see how it works
-and check that it keeps your data private, but all rights belong to Wintershogun TechLabs.
+Lyncost is published as **source-available** software under the [Lyncost License](LICENSE).  
+The source code is provided openly for auditability, privacy verification, and community review.
 
-- The official **Linux** builds are free for everyone, for personal and business use.
-- The **Windows** edition (coming soon) is a one-time purchase: ₹799 in India, US$10 elsewhere.
-- You may not copy, modify, build, or redistribute the code. Pull requests are not accepted unless invited.
+- **Source Audit:** You may inspect and review the code to verify offline operation and privacy guarantees.
+- **Windows Edition:** Distributed via [wintershogun.com/products/lyncost](https://wintershogun.com/products/lyncost).
+- **Linux Builds:** Distributed directly via GitHub Releases and the official install script.
 
-See [LICENSE](LICENSE) or https://lyncost.wintershogun.com/license for the full terms.
-Also see [PRIVACY.md](PRIVACY.md), [SECURITY.md](SECURITY.md), and [CONTRIBUTING.md](CONTRIBUTING.md).
+© 2026 UltraDarshan · Wintershogun TechLabs. All rights reserved.

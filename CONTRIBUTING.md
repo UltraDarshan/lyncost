@@ -1,16 +1,17 @@
-# Contributing
+# Contributing to Lyncost
 
-Thank you for your interest in Lyncost.
+Thank you for your interest in Lyncost!
 
-Lyncost is **source-available, not open source** (see [LICENSE](LICENSE)). We do not accept pull
-requests or code contributions unless we have invited them in writing.
+Lyncost is developed and maintained as a **source-available** desktop project by [@UltraDarshan](https://github.com/UltraDarshan) and the Winter Shogun team.
 
-You can still help a lot:
+## How You Can Help
 
-- **Report bugs** in [Issues](https://github.com/UltraDarshan/lyncost/issues): what you did, what
-  happened, your Lyncost version and Linux distribution. Please never attach your database or real
-  financial data.
-- **Suggest ideas** in Issues.
-- **Report security problems privately**, as described in [SECURITY.md](SECURITY.md).
+- **Bug Reports:** If you discover a bug or visual glitch, please open an issue in [GitHub Issues](https://github.com/UltraDarshan/lyncost/issues). Include your operating system, Lyncost version, and steps to reproduce. *Please never share real financial numbers or sensitive database files.*
+- **Feature Requests:** Have an idea for a financial calculator, budget workflow, or report? Feel free to open a feature discussion in Issues.
+- **Security Disclosures:** If you believe you have discovered a vulnerability, please read and follow our [Security Policy](SECURITY.md) for confidential reporting.
 
-Feedback you send may be used freely to improve Lyncost, as described in the license.
+## Code Contributions
+
+Because Lyncost is source-available and relies on strict binary and IPC contracts across Windows and Linux, core feature development is led by the core team. 
+
+If you are interested in contributing packaging fixes (e.g. Arch PKGBUILD, Nix, flatpak), distro compatibility improvements, or documentation, please open an issue first to coordinate before submitting a pull request.

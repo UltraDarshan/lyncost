@@ -19,11 +19,11 @@ Lyncost for Windows, and a few fixes for everyone.
 
 ## 1.0.0 — 2026-10-24
 
-First public release for Linux, free for everyone.
+First public release for Linux.
 
-- Same app as 0.2.6, now officially launched at https://lyncost.wintershogun.com.
+- Officially launched at https://wintershogun.com/products/lyncost.
 - Licensed under the Lyncost License 1.0 (source-available; see LICENSE).
-- The app's homepage link now points to lyncost.wintershogun.com.
+- The app's homepage link points to wintershogun.com/products/lyncost.
 
 ## 0.2.6 — 2026-10-24
 

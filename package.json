@@ -1,6 +1,12 @@
 {
   "name": "lyncost",
   "version": "1.1.1",
+  "author": "UltraDarshan <darshantech@proton.me>",
+  "homepage": "https://wintershogun.com/products/lyncost",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/UltraDarshan/lyncost.git"
+  },
   "private": true,
   "type": "module",
   "scripts": {
