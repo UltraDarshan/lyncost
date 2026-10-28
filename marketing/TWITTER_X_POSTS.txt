@@ -1,0 +1,97 @@
+================================================================================
+LYNCOST - X (TWITTER) READY-TO-COPY POSTS & THREADS
+(Clean text format - No markdown symbols. Ready to copy, paste, and post)
+================================================================================
+
+--------------------------------------------------------------------------------
+THREAD 1: OFFICIAL LAUNCH THREAD (5 Tweets)
+--------------------------------------------------------------------------------
+
+TWEET 1 (Hook - Attach: assets/screenshots/01-dashboard-dark.png):
+Most personal finance apps today do 3 things:
+1. Charge you $100/year to view your own money
+2. Force you to give away your net-banking passwords
+3. Eat 600 MB of RAM with a bloated Electron webview
+
+So I spent the last few months building an alternative.
+
+Introducing Lyncost: a fast, private desktop finance app built with Rust, Tauri, and SQLite.
+
+[Thread continues below]
+
+
+TWEET 2:
+When your budget app crashes or asks for another monthly fee, remember: accounting is basic math. It should never require a 24/7 cloud server.
+
+We engineered Lyncost from scratch with Rust & Tauri v2:
+- 4.1 MB binary size
+- Sub-30 MB RAM idle
+- Instant cold startup
+- 100% offline local SQLite storage
+
+
+TWEET 3 (Attach: assets/screenshots/05-investments-dark.png):
+Your financial data is nobody's business.
+
+Lyncost has:
+- Zero cloud sync
+- Zero third-party analytics or telemetry
+- Zero bank login credentials
+
+All records live in an ACID SQLite database on your hard drive. Automated daily backups run locally with zero effort.
+
+
+TWEET 4 (Attach: assets/screenshots/03-budgets-dark.png):
+Looking backwards at last month’s expenses doesn’t stop you from overspending today.
+
+Lyncost’s 30-Day Cashflow Cockpit blends your upcoming bills, recurring invoices, and liquid bank balances to forecast your safe-to-spend runway before you make purchases.
+
+
+TWEET 5:
+Lyncost is available now:
+- Windows: 14-day free trial, then pay once for a lifetime license (no subscriptions)
+- Linux: Standalone .rpm, .deb, and AppImage packages
+
+Try it here: https://wintershogun.com/products/lyncost
+GitHub: https://github.com/UltraDarshan/lyncost
+
+Feedback is deeply appreciated. What is your biggest pet peeve with modern budgeting apps?
+
+
+--------------------------------------------------------------------------------
+STANDALONE TWEETS (High Engagement / Punchy)
+--------------------------------------------------------------------------------
+
+TWEET A (RAM Comparison - Attach: assets/screenshots/01-dashboard-dark.png):
+Slack: 600 MB RAM
+Notion: 450 MB RAM
+YNAB (in browser): 250 MB RAM
+
+Lyncost (Full personal accounting & net worth tracking in Rust): 28 MB RAM.
+
+Make desktop software lightweight again.
+
+Try it: https://wintershogun.com/products/lyncost
+#rustlang #tauri #softwareengineering #buildinpublic
+
+
+TWEET B (The Anti-Subscription Take):
+Why should you pay a monthly fee to look at your own monthly expenses?
+
+Lyncost has:
+- Zero subscriptions
+- One-time ownership
+- Zero bank passwords
+- 100% offline local SQLite
+
+Windows & Linux: https://wintershogun.com/products/lyncost
+
+
+TWEET C (Cash Runway Question - Attach: assets/screenshots/01-dashboard-dark.png):
+If you lost your primary income tomorrow, how many months of runway do you actually have?
+
+Most people don’t know because their money is scattered across 4 bank accounts and 2 wallets.
+
+Lyncost tracks your liquid cash runway in real time on your desktop.
+
+Try the free trial: https://wintershogun.com/products/lyncost

@@ -1,0 +1,102 @@
+================================================================================
+LYNCOST - REDDIT READY-TO-COPY POSTS
+(Clean text format - No markdown symbols. Ready to copy, paste, and post)
+================================================================================
+
+--------------------------------------------------------------------------------
+POST 1: FOR r/selfhosted and r/privacy
+--------------------------------------------------------------------------------
+IMAGE TO ATTACH:
+assets/screenshots/01-dashboard-dark.png
+
+TITLE:
+I built an air-gapped personal finance desktop app with Rust & SQLite because I refused to give bank passwords to cloud budget SaaS
+
+POST BODY:
+Hey r/selfhosted,
+
+Like many of you, I wanted a clean way to track my cashflow, recurring bills, and investments without handing over my bank credentials to a cloud aggregator or paying 100 dollars a year to SaaS tools that get breached every six months.
+
+I did not want a heavy Electron web wrapper either, so I spent the last few months building Lyncost: a native desktop app built with Rust, Tauri v2, and local SQLite.
+
+Here is how it is built:
+
+- 100% Local SQLite: All transactions, categories, and account states live in a single ACID .db file on your machine. No accounts, no external database servers required, and automated daily backups to a local folder.
+
+- Air-Gapped by Design: Zero analytics, no telemetry, no cookies, and no network calls except when you manually check for GitHub releases.
+
+- Sub-30 MB RAM & 4.1 MB Binary: Because it compiles directly to native machine code without bundling a whole Chromium instance, it launches instantly and sips system resources.
+
+- CSV & Statement Friendly: Import your existing statements via standard CSV with auto-column matching and automated categorization rules.
+
+- 30-Day Cashflow Projection: Combines scheduled recurring bills with liquid balances so you know your actual safe-to-spend buffer.
+
+It is available as native packages for Linux (.rpm, .deb, AppImage) and Windows.
+
+- GitHub: https://github.com/UltraDarshan/lyncost
+- Website: https://wintershogun.com/products/lyncost
+
+I would love your honest feedback on the SQLite schema, UI workflow, and feature roadmap. Happy to answer any technical questions about the Tauri/Rust architecture below!
+
+
+--------------------------------------------------------------------------------
+POST 2: FOR r/linux and r/opensource
+--------------------------------------------------------------------------------
+IMAGE TO ATTACH:
+assets/screenshots/01-dashboard-dark.png
+
+TITLE:
+I built a 4.1 MB personal finance app in Rust & Tauri v2 with native .rpm, .deb, and AppImage packages
+
+POST BODY:
+Hi r/linux,
+
+Almost every modern personal finance tool today is either an Electron app eating 600 MB of RAM or a closed cloud service demanding your bank password.
+
+I wanted something lightweight, privacy-respecting, and fast on my Fedora workstation, so I engineered Lyncost.
+
+Key Linux details:
+- Tiny footprint: 4.1 MB package size, starts in milliseconds, uses under 30 MB RAM idle.
+- Packages available: Standalone .rpm (Fedora/RHEL/openSUSE), .deb (Ubuntu/Debian/Mint), and portable .AppImage.
+- One-line terminal installer: curl -fsSL https://raw.githubusercontent.com/UltraDarshan/lyncost/main/install.sh | sh
+- System Theme Integration: Supports system dark and light mode and Wayland natively.
+- Data sovereignty: Stored in your standard $XDG_DATA_HOME using an ACID SQLite database. You own the file, can query it with the sqlite3 CLI, and back it up easily with Borg, restic, or rsync.
+
+The source is hosted on GitHub: https://github.com/UltraDarshan/lyncost
+Product page: https://wintershogun.com/products/lyncost
+
+Let me know what distros you test it on or if you hit any packaging quirks!
+
+
+--------------------------------------------------------------------------------
+POST 3: FOR r/personalfinance and r/financialindependence
+--------------------------------------------------------------------------------
+IMAGE TO ATTACH:
+assets/screenshots/03-budgets-dark.png
+
+TITLE:
+I got tired of $100/year budget app subscriptions, so I built a 1-time purchase desktop cashflow tracker
+
+POST BODY:
+Hey everyone,
+
+When Mint shut down and YNAB pushed another subscription hike, I realized how absurd it is to pay 100 dollars or more every single year just to see where your own money goes. Worse, connecting banking passwords to third-party aggregators always left a bad taste in my mouth.
+
+I spent the past few months building Lyncost as a clean, local desktop alternative.
+
+What it does differently:
+
+1. The 30-Day Cashflow Projection: Most apps tell you what you spent last month. Lyncost looks forward: it blends your confirmed recurring bills (rent, utilities, subscriptions) with your current liquid cash to show your exact projected runway 30 days from now.
+
+2. Category Budget Burn Rates: Real-time progress bars show whether your spending pace for dining, groceries, and shopping is on track to survive the month without overdrawing.
+
+3. Net Worth & Asset Allocation: Tracks liquid cash, savings, stock/crypto portfolios, and liabilities in one unified cockpit.
+
+4. No Monthly Fees: 14-day free trial on Windows, then a one-time lifetime license. Zero monthly fees, zero subscriptions.
+
+5. Completely Private: Runs entirely on your PC. No bank logins, no accounts, and no data leaving your machine.
+
+Check it out here: https://wintershogun.com/products/lyncost
+GitHub: https://github.com/UltraDarshan/lyncost
+
+Hope this helps anyone looking to take back control of their financial data without monthly SaaS overhead!

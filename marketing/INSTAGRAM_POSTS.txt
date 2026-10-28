@@ -1,0 +1,186 @@
+================================================================================
+LYNCOST - INSTAGRAM READY-TO-COPY MARKETING POSTS
+(Clean text format - No markdown symbols. Ready to copy, paste, and post)
+================================================================================
+
+--------------------------------------------------------------------------------
+POST 1: THE CORE BENEFITS (Why switch to Lyncost)
+--------------------------------------------------------------------------------
+IMAGE TO ATTACH:
+assets/screenshots/01-dashboard-dark.png
+
+CAPTION:
+Most personal finance apps today charge you 100 dollars every year just to see where your own money went. Even worse, they ask for your online banking passwords and upload your transaction history to third-party clouds.
+
+We built Lyncost because managing your money should be private, fast, and simple.
+
+Here is what makes it so good:
+
+1. Never asks for your bank password.
+You never have to connect your bank account or expose your logins. Import your statement with one click via standard CSV, or log transactions in seconds.
+
+2. Zero monthly subscriptions.
+You buy it once and own it for life. No monthly charges, no annual renewals, and no surprise price hikes.
+
+3. Complete privacy and local storage.
+All your financial data stays directly on your own computer inside a secure SQLite database. Zero tracking, zero ads, zero data selling.
+
+4. 30-Day cashflow runway.
+Instead of only showing what you spent in the past, Lyncost looks 30 days into the future. It blends your upcoming bills, recurring income, and current cash so you always know your real safe-to-spend balance before making any purchase.
+
+5. Lightning fast.
+It is a tiny 4.1 MB desktop app built with Rust. It opens in less than a second and uses under 30 MB of RAM, so your laptop never slows down.
+
+Download the free 14-day trial for Windows or get the standalone packages for Linux.
+
+Link in bio (@wintershogun) or visit wintershogun.com/products/lyncost
+
+TAGS:
+#personalfinance #budgeting #moneytips #financialfreedom #smartmoney #budgetapp #cashflow #networth #minimalism #software #desksetup #productivity #techtools #privacy
+
+
+--------------------------------------------------------------------------------
+POST 2: HOW GOOD IT IS (Performance, Speed & Zero Bloat)
+--------------------------------------------------------------------------------
+IMAGE TO ATTACH:
+assets/screenshots/05-investments-dark.png
+(Or multi-image with 01-dashboard-dark.png and 05-investments-dark.png)
+
+CAPTION:
+Why does a modern budgeting app need 600 MB of RAM and 10 seconds to open?
+
+It doesn't.
+
+We spent months engineering Lyncost in native Rust and Tauri so that it feels like a genuine high-performance tool, not a heavy browser in disguise.
+
+How good is the performance?
+
+- File size: Just 4.1 MB. It downloads in 3 seconds.
+- Memory usage: Under 30 MB RAM while running. That is 10 times lighter than typical cloud web apps.
+- Instant launch: It opens the millisecond you click it. Zero loading spinners.
+- Local ACID SQLite engine: Built on the most reliable database in the world. It automatically saves a daily backup copy so you never lose a single transaction.
+- Works 100% offline: You can budget on a flight, on the train, or with your Wi-Fi completely turned off.
+
+Everything you need in one clean dashboard:
+- Bank accounts and cash wallets
+- Budget pacing for dining, groceries, and bills
+- Stock and crypto portfolio tracking
+- Debt and loan payoffs
+- Upcoming bill reminders
+
+Try it today on your Windows PC or Linux workstation.
+
+Link in bio or go to wintershogun.com/products/lyncost
+
+TAGS:
+#softwareengineering #tech #minimalism #deskspace #productivitytools #cleanui #rustlang #codinglife #budgetinglife #financialindependence #moneygoals #offlinefirst #privacyfirst
+
+
+--------------------------------------------------------------------------------
+POST 3: THE 30-DAY CASHFLOW ADVANTAGE (Solves the biggest money problem)
+--------------------------------------------------------------------------------
+IMAGE TO ATTACH:
+assets/screenshots/03-budgets-dark.png
+
+CAPTION:
+Looking at last month's spending report is like driving a car by only looking in the rearview mirror.
+
+Knowing you spent 500 dollars on dining three weeks ago does not help you decide if you can afford that weekend trip or that new laptop today.
+
+That is why we designed Lyncost around the 30-Day Cashflow Cockpit.
+
+Here is how it works:
+
+1. It tracks all your confirmed recurring bills (rent, subscriptions, insurance, loan EMIs).
+2. It factors in your scheduled paychecks or client invoices.
+3. It combines them with your current liquid bank balances.
+4. It calculates your exact safe cash runway for the next 30 days.
+
+No guesswork. No mental math. You know exactly what money is safe to spend and what money is already reserved for upcoming bills.
+
+Available now for Windows (14-day free trial, then own it for life) and Linux.
+
+Check the link in bio to start your trial today: wintershogun.com/products/lyncost
+
+TAGS:
+#budgeting #cashflow #financialplanning #moneyhacks #personalfinance #wealthbuilding #savingmoney #financialliteracy #budgetingtips #smartspending #moneymanagement
+
+
+--------------------------------------------------------------------------------
+POST 4: SLIDE-BY-SLIDE CAROUSEL (5 Slides for maximum saves & shares)
+--------------------------------------------------------------------------------
+IMAGES TO USE IN ORDER:
+Slide 1: Custom title graphic or assets/branding/social-banner-1200x630.png
+Slide 2: assets/screenshots/01-dashboard-dark.png
+Slide 3: assets/screenshots/03-budgets-dark.png
+Slide 4: assets/screenshots/05-investments-dark.png
+Slide 5: assets/branding/lyncost-icon-512x512.png
+
+SLIDE TEXT:
+
+[Slide 1 - Cover]
+5 Reasons Why Your Budget App Shouldn't Be In The Cloud
+
+[Slide 2]
+1. Your Bank Logins Belong To You
+Cloud apps ask for your banking passwords. If their cloud gets hacked, your entire financial history is exposed.
+Lyncost runs 100% on your PC with a private local database.
+
+[Slide 3]
+2. Stop Paying Subscriptions To See Your Own Money
+Renting software at 10 to 15 dollars a month drains hundreds over the years.
+Lyncost is a single lifetime purchase. Pay once, use forever.
+
+[Slide 4]
+3. Know Your Safe Runway 30 Days Ahead
+Most apps only show past history. Lyncost forecasts your cashflow 30 days into the future so you never get caught off guard by upcoming bills.
+
+[Slide 5]
+4. Built With Rust: 4.1 MB and Under 30 MB RAM
+Instant startup. Zero lagging. No bundled Chrome browser eating your battery.
+Try the 14-day free trial on Windows or download native Linux packages.
+Link in bio: wintershogun.com/products/lyncost
+
+CAPTION FOR THIS CAROUSEL:
+Why pay 100 dollars a year to rent software that stores your banking data on an external server?
+
+Swipe through to see why thousands of people are switching to offline-first, native desktop accounting.
+
+Try Lyncost today on Windows and Linux.
+Link in bio (@wintershogun) or visit wintershogun.com/products/lyncost
+
+TAGS:
+#personalfinance #dataprivacy #budgeting #cybersecurity #selfhosted #moneytips #smartmoney #softwaredevelopment #techlifestyle #desktopapp #privacy #minimalism
+
+
+--------------------------------------------------------------------------------
+POST 5: REEL / SHORT VIDEO SCRIPT (15 to 20 seconds)
+--------------------------------------------------------------------------------
+AUDIO: Clean lo-fi beat or trending tech audio.
+
+VISUAL ACTIONS:
+0:00 - 0:03 -> Show Task Manager on computer screen highlighting an app using 600 MB of RAM.
+Text on screen: "Why does a budget app need 600 MB of RAM?"
+
+0:04 - 0:08 -> Click on Lyncost icon. App opens instantly in dark mode.
+Text on screen: "Lyncost: 4.1 MB file. 28 MB RAM. Written in Rust."
+
+0:09 - 0:14 -> Quick click through Dashboard, Budgets, and Investments tabs.
+Text on screen: "No bank passwords. No cloud. No monthly subscriptions."
+
+0:15 - 0:20 -> Show the 30-Day Cashflow projection card.
+Text on screen: "Know your cash runway 30 days ahead. Try it free -> Link in bio."
+
+CAPTION FOR REEL:
+Desktop software should be fast, private, and owned for life. 
+
+Lyncost is an air-gapped personal finance app for Windows and Linux:
+- 4.1 MB file size
+- Sub-30 MB RAM
+- 100% offline local SQLite
+- 14-day free trial on Windows
+
+Link in bio to try it out!
+
+TAGS:
+#techreels #codinglife #softwareengineer #deskgoals #rustlang #budgetapp #personalfinancetips #cleansoftware #developerlife
